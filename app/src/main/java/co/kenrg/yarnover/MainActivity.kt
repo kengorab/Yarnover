@@ -1,46 +1,69 @@
 package co.kenrg.yarnover
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-import android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AppCompatActivity
+import android.view.Gravity
 import android.view.View
-import co.kenrg.yarnover.ext.actionBarSize
+import android.widget.Toast
 import org.jetbrains.anko.*
-import org.jetbrains.anko.appcompat.v7.toolbar
-import org.jetbrains.anko.design.appBarLayout
-import org.jetbrains.anko.design.coordinatorLayout
 
 class MainActivity : AppCompatActivity() {
 
-  private fun makeLayout(mainActivity: MainActivity): View =
-      mainActivity.UI {
-        coordinatorLayout {
-          fitsSystemWindows = true
+  private fun makeLayout(mainActivity: MainActivity): View {
+    val appLogoViewId = 1
+    val primaryColor = getColor(mainActivity, R.color.colorPrimary)
 
-          appBarLayout {
-            lparams(width = matchParent, height = wrapContent)
+    return mainActivity.UI {
+      relativeLayout {
+        lparams(width = matchParent, height = matchParent)
+        backgroundColor = primaryColor
 
-            toolbar(R.style.AppTheme_PopupOverlay) {
-              lparams(width = matchParent, height = actionBarSize())
+        verticalLayout {
+          id = appLogoViewId
 
-              mainActivity.setSupportActionBar(this)
-              mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            }.lparams {
-              scrollFlags = SCROLL_FLAG_SCROLL or SCROLL_FLAG_ENTER_ALWAYS
-            }
+          textView("Yarnover") {
+            gravity = Gravity.CENTER
+            textColor = Color.WHITE
+            textSize = 36f
+            typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
           }
 
-          frameLayout {
-            textView {
-              text = "Hello World!"
-            }
-          }.lparams(width = matchParent, height = matchParent) {
-            behavior = AppBarLayout.ScrollingViewBehavior()
+          imageView {
+            setImageResource(R.drawable.yarn_ball)
+            setColorFilter(Color.WHITE)
           }
+
+          textView("for Ravelry") {
+            gravity = Gravity.CENTER
+            textColor = Color.WHITE
+            textSize = 18f
+            typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
+          }
+
+        }.lparams { centerInParent() }
+
+        relativeLayout {
+
+          button("Login to Ravelry") {
+            textColor = primaryColor
+            backgroundColor = Color.WHITE
+            padding = dip(12)
+
+            onClick {
+              Toast.makeText(mainActivity, "Begin OAuth 1.0a process...", Toast.LENGTH_LONG).show()
+            }
+          }.lparams { centerInParent() }
+        }.lparams {
+          below(appLogoViewId)
+          alignParentBottom()
+          centerHorizontally()
         }
-      }.view
+      }
+    }.view
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
