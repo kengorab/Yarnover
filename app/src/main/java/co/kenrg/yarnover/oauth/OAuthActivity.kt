@@ -1,6 +1,5 @@
 package co.kenrg.yarnover.oauth
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -13,11 +12,11 @@ import co.kenrg.yarnover.oauth.OAuthManager.AUTH_CALLBACK_URL
 import org.jetbrains.anko.webView
 
 class OAuthActivity : AppCompatActivity() {
-  private lateinit var context: Context
+  private lateinit var activity: OAuthActivity
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    context = this
+    activity = this
 
     val authorizationUri = intent.data
 
@@ -28,9 +27,10 @@ class OAuthActivity : AppCompatActivity() {
           super.onPageStarted(view, url, favicon)
           if (url.startsWith(AUTH_CALLBACK_URL)) {
             view.stopLoading()
-            val intent = Intent(context, AuthenticateActivity::class.java)
+            val intent = Intent(activity, AuthenticateActivity::class.java)
             intent.data = Uri.parse(url)
-            context.startActivity(intent)
+            activity.startActivity(intent)
+            activity.finish()
           }
         }
       })
