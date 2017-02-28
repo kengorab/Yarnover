@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Yarnover</string>
+
+    <string name="ravelry_auth_key">B31F523706253B85841C</string>
+    <string name="ravelry_secret_key">Z9CpnDIiOuSp1pNnhFcauf4h3ux4UsbkqsiQR3Vb</string>
 </resources>
