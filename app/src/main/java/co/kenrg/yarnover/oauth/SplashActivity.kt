@@ -10,8 +10,8 @@ import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.View
-import co.kenrg.yarnover.MainActivity
 import co.kenrg.yarnover.R
+import co.kenrg.yarnover.facets.hotrightnow.HotRightNowActivity
 import org.jetbrains.anko.*
 
 class SplashActivity : AppCompatActivity() {
@@ -73,7 +73,7 @@ class SplashActivity : AppCompatActivity() {
     splashActivity = this
 
     if (OAuthManager.setAccessTokenFromSharedPrefs(this)) {
-      startActivity(Intent(this, MainActivity::class.java))
+      startActivity(Intent(this, HotRightNowActivity::class.java))
     } else {
       setContentView(makeSplashScreen(this))
     }

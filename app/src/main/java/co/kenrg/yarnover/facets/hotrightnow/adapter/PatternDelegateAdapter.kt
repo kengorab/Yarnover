@@ -1,0 +1,47 @@
+package co.kenrg.yarnover.facets.hotrightnow.adapter
+
+import android.graphics.Color
+import android.graphics.Typeface
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import org.jetbrains.anko.*
+
+class PatternDelegateAdapter : ViewTypeDelegateAdapter {
+  override fun onCreateViewHolder(parent: ViewGroup) =
+      PatternViewHolder(PatternItemComponent(parent))
+
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) =
+      (holder as PatternViewHolder).bind(item as PatternViewItem)
+
+  inner class PatternViewHolder(val patternItemComponent: PatternItemComponent) : RecyclerView.ViewHolder(patternItemComponent.inflate()) {
+    fun bind(item: PatternViewItem) {
+      patternItemComponent.bindNewsItem(item)
+    }
+  }
+
+  class PatternItemComponent(val parent: ViewGroup) : AnkoComponent<ViewGroup> {
+    lateinit var title: TextView
+
+    fun inflate() = createView(AnkoContext.create(parent.context, parent))
+
+    fun bindNewsItem(item: PatternViewItem) {
+      this.title.text = item.name
+    }
+
+    override fun createView(ui: AnkoContext<ViewGroup>): View {
+      return with(ui) {
+        verticalLayout {
+          padding = dip(5)
+
+          title = textView {
+            textColor = Color.parseColor("#040404")
+            textSize = 15f
+            typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
+          }
+        }
+      }
+    }
+  }
+}

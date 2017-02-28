@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import co.kenrg.yarnover.MainActivity
+import co.kenrg.yarnover.facets.hotrightnow.HotRightNowActivity
 import co.kenrg.yarnover.oauth.OAuthManager.VERIFIER_CODE_QUERY_PARAM
 import org.jetbrains.anko.doAsync
 
@@ -28,7 +28,7 @@ class AuthenticateActivity : AppCompatActivity() {
         doAsync {
           val success = OAuthManager.getAndSetAccessToken(context, verifierCode)
           if (success) {
-            val mainActivity = Intent(context, MainActivity::class.java)
+            val mainActivity = Intent(context, HotRightNowActivity::class.java)
             startActivity(mainActivity)
             finish()
           } else {
