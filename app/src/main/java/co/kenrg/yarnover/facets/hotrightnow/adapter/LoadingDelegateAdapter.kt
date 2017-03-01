@@ -4,12 +4,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import co.kenrg.yarnover.iface.adapter.DelegateAdapter
 import org.jetbrains.anko.*
 
-class LoadingDelegateAdapter : ViewTypeDelegateAdapter {
+class LoadingDelegateAdapter : DelegateAdapter<ViewItem> {
   override fun onCreateViewHolder(parent: ViewGroup) = LoadingViewHolder(LoadingComponent(parent))
 
-  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {}
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewItem) {}
 
   class LoadingViewHolder(component: LoadingComponent) : RecyclerView.ViewHolder(component.inflate())
 

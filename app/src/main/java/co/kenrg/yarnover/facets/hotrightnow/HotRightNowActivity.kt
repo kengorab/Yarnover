@@ -11,11 +11,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem.SHOW_AS_ACTION_NEVER
 import android.view.View
-import android.widget.TextView
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.ext.actionBarSize
-import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternViewItem
-import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternsAdapter
+import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
+import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import co.kenrg.yarnover.oauth.OAuthManager
 import co.kenrg.yarnover.oauth.SplashActivity
 import org.jetbrains.anko.UI
@@ -28,9 +27,8 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.wrapContent
 
 class HotRightNowActivity : AppCompatActivity() {
-  private lateinit var userJsonField: TextView
   lateinit private var patternList: RecyclerView
-  private val patternsAdapter = PatternsAdapter()
+  private val patternsAdapter = PatternDelegatorAdapter()
 
   private fun makeLayout(activity: HotRightNowActivity): View =
       activity.UI {
@@ -57,9 +55,6 @@ class HotRightNowActivity : AppCompatActivity() {
 
               val linearLayout = LinearLayoutManager(context)
               layoutManager = linearLayout
-
-//              clearOnScrollListeners()
-//              addOnScrollListener(InfiniteScrollListener({ requestNews() }, linearLayout))
             }
           }.lparams(width = matchParent, height = matchParent) {
             behavior = AppBarLayout.ScrollingViewBehavior()
@@ -73,11 +68,11 @@ class HotRightNowActivity : AppCompatActivity() {
 
 //    requestPatterns()
     patternsAdapter.addPatterns(listOf(
-        PatternViewItem(1, "Pattern 1"),
-        PatternViewItem(2, "Pattern 2"),
-        PatternViewItem(3, "Pattern 3"),
-        PatternViewItem(4, "Pattern 4"),
-        PatternViewItem(5, "Pattern 5")
+        ViewItem.Pattern(1, "Pattern 1"),
+        ViewItem.Pattern(2, "Pattern 2"),
+        ViewItem.Pattern(3, "Pattern 3"),
+        ViewItem.Pattern(4, "Pattern 4"),
+        ViewItem.Pattern(5, "Pattern 5")
     ))
 
   }

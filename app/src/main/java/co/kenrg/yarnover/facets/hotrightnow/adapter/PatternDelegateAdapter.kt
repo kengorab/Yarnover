@@ -6,17 +6,20 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import co.kenrg.yarnover.iface.adapter.DelegateAdapter
 import org.jetbrains.anko.*
 
-class PatternDelegateAdapter : ViewTypeDelegateAdapter {
+class PatternDelegateAdapter : DelegateAdapter<ViewItem> {
   override fun onCreateViewHolder(parent: ViewGroup) =
       PatternViewHolder(PatternItemComponent(parent))
 
-  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) =
-      (holder as PatternViewHolder).bind(item as PatternViewItem)
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewItem) =
+      (holder as PatternViewHolder).bind(item as ViewItem.Pattern)
 
-  inner class PatternViewHolder(val patternItemComponent: PatternItemComponent) : RecyclerView.ViewHolder(patternItemComponent.inflate()) {
-    fun bind(item: PatternViewItem) {
+  inner class PatternViewHolder(
+      val patternItemComponent: PatternItemComponent
+  ) : RecyclerView.ViewHolder(patternItemComponent.inflate()) {
+    fun bind(item: ViewItem.Pattern) {
       patternItemComponent.bindNewsItem(item)
     }
   }
@@ -26,7 +29,7 @@ class PatternDelegateAdapter : ViewTypeDelegateAdapter {
 
     fun inflate() = createView(AnkoContext.create(parent.context, parent))
 
-    fun bindNewsItem(item: PatternViewItem) {
+    fun bindNewsItem(item: ViewItem.Pattern) {
       this.title.text = item.name
     }
 
