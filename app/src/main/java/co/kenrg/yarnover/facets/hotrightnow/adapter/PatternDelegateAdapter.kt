@@ -30,7 +30,7 @@ class PatternDelegateAdapter : DelegateAdapter<ViewItem> {
     fun inflate() = createView(AnkoContext.create(parent.context, parent))
 
     fun bindNewsItem(item: ViewItem.Pattern) {
-      this.title.text = item.name
+      this.title.text = item.pattern.name
     }
 
     override fun createView(ui: AnkoContext<ViewGroup>): View {

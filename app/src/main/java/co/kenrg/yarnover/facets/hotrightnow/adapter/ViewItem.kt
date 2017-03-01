@@ -12,8 +12,5 @@ sealed class ViewItem(viewType: ViewType) : DelegateViewItem<ViewItem.ViewType>(
   }
 
   object Loading : ViewItem(ViewType.LOADING)
-  class Pattern(
-      val id: Int,
-      val name: String
-  ) : ViewItem(ViewType.PATTERN)
+  class Pattern(val pattern: co.kenrg.yarnover.api.domain.Pattern) : ViewItem(ViewType.PATTERN)
 }
