@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
 import android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -49,6 +50,8 @@ class HotRightNowActivity : AppCompatActivity() {
           }
 
           frameLayout {
+            backgroundColor = getColor(activity, R.color.backgroundColor)
+
             patternList = recyclerView {
               lparams(width = matchParent, height = matchParent)
 
@@ -80,7 +83,7 @@ class HotRightNowActivity : AppCompatActivity() {
     val api = retrofit.create(RavelryApi::class.java)
 
     doAsync {
-      val response = api.searchPatterns(1, 1).execute()
+      val response = api.searchPatterns(1, 5).execute()
 
       uiThread {
         if (!response.isSuccessful) {
