@@ -15,23 +15,31 @@ import android.view.View
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
-import co.kenrg.yarnover.api.RavelryApi
+import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.ext.actionBarSize
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
+import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
 import co.kenrg.yarnover.oauth.OAuthManager
 import co.kenrg.yarnover.oauth.SplashActivity
-import org.jetbrains.anko.*
+import org.jetbrains.anko.UI
 import org.jetbrains.anko.appcompat.v7.toolbar
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.design.appBarLayout
 import org.jetbrains.anko.design.coordinatorLayout
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.frameLayout
+import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.recyclerview.v7.recyclerView
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.wrapContent
 
 class HotRightNowActivity : AppCompatActivity() {
-  lateinit private var patternList: RecyclerView
+  private val ravelryApi = api()
   private val patternsAdapter = PatternDelegatorAdapter()
+
+  lateinit private var patternList: RecyclerView
+  private var currentPage = 0
 
   private fun makeLayout(activity: HotRightNowActivity): View =
       activity.UI {
@@ -60,6 +68,11 @@ class HotRightNowActivity : AppCompatActivity() {
 
               val linearLayout = LinearLayoutManager(context)
               layoutManager = linearLayout
+
+              clearOnScrollListeners()
+              addOnScrollListener(InfiniteScrollListener(linearLayout) {
+                requestPatterns(currentPage + 1)
+              })
             }
           }.lparams(width = matchParent, height = matchParent) {
             behavior = AppBarLayout.ScrollingViewBehavior()
@@ -71,24 +84,20 @@ class HotRightNowActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(makeLayout(this))
 
-    requestPatterns()
+    requestPatterns(currentPage + 1)
   }
 
-  fun requestPatterns() {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.ravelry.com")
-        .addConverterFactory(MoshiConverterFactory.create())
-        .client(OAuthManager.getSignedClient())
-        .build()
-    val api = retrofit.create(RavelryApi::class.java)
-
+  fun requestPatterns(page: Int) {
     doAsync {
-      val response = api.searchPatterns(1, 5).execute()
+      val response = ravelryApi.searchPatterns(
+          page = page
+      ).execute()
 
       uiThread {
         if (!response.isSuccessful) {
           Toast.makeText(this@HotRightNowActivity, "Error fetching patterns...", LENGTH_LONG).show()
         } else {
+          currentPage = page
           val patternViewItems = response.body().patterns.map { pattern ->
             ViewItem.Pattern(pattern)
           }
