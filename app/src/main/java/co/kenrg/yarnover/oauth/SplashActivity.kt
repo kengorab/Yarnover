@@ -1,6 +1,5 @@
 package co.kenrg.yarnover.oauth
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,7 +12,7 @@ import org.jetbrains.anko.onClick
 import org.jetbrains.anko.uiThread
 
 class SplashActivity : AppCompatActivity() {
-  private lateinit var splashActivity: Activity
+  private val activity: SplashActivity = this
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -35,11 +34,11 @@ class SplashActivity : AppCompatActivity() {
 
       uiThread {
         if (uri != null) {
-          val browser = Intent(splashActivity, OAuthActivity::class.java)
+          val browser = Intent(activity, OAuthActivity::class.java)
           browser.data = uri
 
-          splashActivity.startActivity(browser)
-          splashActivity.finish()
+          activity.startActivity(browser)
+          activity.finish()
         }
       }
     }

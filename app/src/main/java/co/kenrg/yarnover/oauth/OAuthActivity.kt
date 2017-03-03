@@ -9,7 +9,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import co.kenrg.yarnover.oauth.OAuthManager.AUTH_CALLBACK_URL
-import org.jetbrains.anko.webView
 
 class OAuthActivity : AppCompatActivity() {
   private lateinit var activity: OAuthActivity
@@ -20,7 +19,7 @@ class OAuthActivity : AppCompatActivity() {
 
     val authorizationUri = intent.data
 
-    webView {
+    val webView = WebView(this).apply {
       setWebChromeClient(WebChromeClient())
       setWebViewClient(object : WebViewClient() {
         override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
@@ -37,5 +36,7 @@ class OAuthActivity : AppCompatActivity() {
 
       loadUrl(authorizationUri.toString())
     }
+
+    setContentView(webView)
   }
 }
