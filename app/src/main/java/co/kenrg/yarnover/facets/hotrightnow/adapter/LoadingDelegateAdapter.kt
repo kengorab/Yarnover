@@ -1,35 +1,19 @@
 package co.kenrg.yarnover.facets.hotrightnow.adapter
 
 import android.support.v7.widget.RecyclerView
-import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import co.kenrg.yarnover.R
 import co.kenrg.yarnover.iface.adapter.DelegateAdapter
-import org.jetbrains.anko.*
 
 class LoadingDelegateAdapter : DelegateAdapter<ViewItem> {
-  override fun onCreateViewHolder(parent: ViewGroup) = LoadingViewHolder(LoadingComponent(parent))
+  class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
+
+  override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+    val layoutInflater = LayoutInflater.from(parent.context)
+    return LoadingViewHolder(layoutInflater.inflate(R.layout.component_loading, parent, false))
+  }
 
   override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewItem) {}
-
-  class LoadingViewHolder(component: LoadingComponent) : RecyclerView.ViewHolder(component.inflate())
-
-  class LoadingComponent(val parent: ViewGroup) : AnkoComponent<ViewGroup> {
-    fun inflate() = createView(AnkoContext.create(parent.context, parent))
-
-    override fun createView(ui: AnkoContext<ViewGroup>): View {
-      return with(ui) {
-        linearLayout {
-          lparams(width = matchParent, height = wrapContent) {
-            margin = dip(20)
-          }
-          gravity = Gravity.CENTER_HORIZONTAL
-
-          progressBar {
-            lparams(width = dip(40), height = dip(40))
-          }
-        }
-      }
-    }
-  }
 }
