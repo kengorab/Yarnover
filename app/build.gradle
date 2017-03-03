@@ -4,15 +4,16 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '25.0.2'
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+
         applicationId "co.kenrg.yarnover"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -32,19 +33,14 @@ dependencies {
     compile 'com.android.support:design:25.2.0'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-//    compile "org.jetbrains.anko:anko-sdk19:$anko_version"
-//    compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
-//    compile "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
-//    compile "org.jetbrains.anko:anko-design:$anko_version"
-//    compile "org.jetbrains.anko:anko-cardview-v7:$anko_version"
     compile "org.jetbrains.anko:anko-common:$anko_version"
 
     compile 'se.akerfeldt:okhttp-signpost:1.1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
     compile 'oauth.signpost:signpost-core:1.2.1.2'
-    compile "com.squareup.retrofit2:retrofit:2.0.0"
-    compile "com.squareup.retrofit2:converter-moshi:2.0.0"
+
+    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-moshi:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     testCompile 'junit:junit:4.12'
