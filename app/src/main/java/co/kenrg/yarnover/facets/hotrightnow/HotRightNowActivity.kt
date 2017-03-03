@@ -2,88 +2,51 @@ package co.kenrg.yarnover.facets.hotrightnow
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-import android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem.SHOW_AS_ACTION_NEVER
-import android.view.View
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.Pattern
-import co.kenrg.yarnover.ext.actionBarSize
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
 import co.kenrg.yarnover.oauth.OAuthManager
 import co.kenrg.yarnover.oauth.SplashActivity
-import org.jetbrains.anko.UI
-import org.jetbrains.anko.appcompat.v7.toolbar
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.design.appBarLayout
-import org.jetbrains.anko.design.coordinatorLayout
+import kotlinx.android.synthetic.main.activity_hotrightnow.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.frameLayout
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.uiThread
-import org.jetbrains.anko.wrapContent
 
 class HotRightNowActivity : AppCompatActivity() {
+  private val activity: HotRightNowActivity = this
   private val ravelryApi = api()
   private val patternsAdapter = PatternDelegatorAdapter({ this.handleSelectPattern(it) })
 
-  lateinit private var patternList: RecyclerView
   private var currentPage = 0
-
-  private fun makeLayout(activity: HotRightNowActivity): View =
-      activity.UI {
-        coordinatorLayout {
-          fitsSystemWindows = true
-
-          appBarLayout {
-            lparams(width = matchParent, height = wrapContent)
-
-            toolbar(R.style.AppTheme_PopupOverlay) {
-              activity.setSupportActionBar(this)
-              activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            }.lparams(width = matchParent, height = actionBarSize()) {
-              scrollFlags = SCROLL_FLAG_SCROLL or SCROLL_FLAG_ENTER_ALWAYS
-            }
-          }
-
-          frameLayout {
-            backgroundColor = getColor(activity, R.color.backgroundColor)
-
-            patternList = recyclerView {
-              lparams(width = matchParent, height = matchParent)
-
-              adapter = patternsAdapter
-              setHasFixedSize(true)
-
-              val linearLayout = LinearLayoutManager(context)
-              layoutManager = linearLayout
-
-              clearOnScrollListeners()
-              addOnScrollListener(InfiniteScrollListener(linearLayout) {
-                requestPatterns(currentPage + 1)
-              })
-            }
-          }.lparams(width = matchParent, height = matchParent) {
-            behavior = AppBarLayout.ScrollingViewBehavior()
-          }
-        }
-      }.view
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(makeLayout(this))
+    setContentView(R.layout.activity_hotrightnow)
+
+    toolbar.apply {
+      activity.setSupportActionBar(this)
+      activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
+    patternList.apply {
+      this.adapter = patternsAdapter
+
+      val linearLayoutManager = LinearLayoutManager(context)
+      this.layoutManager = linearLayoutManager
+
+      this.clearOnScrollListeners()
+      this.addOnScrollListener(InfiniteScrollListener(linearLayoutManager) {
+        requestPatterns(currentPage + 1)
+      })
+    }
 
     requestPatterns(currentPage + 1)
   }
@@ -113,7 +76,6 @@ class HotRightNowActivity : AppCompatActivity() {
     val logoutMenuItem = menu?.add("Logout")
     logoutMenuItem?.setShowAsAction(SHOW_AS_ACTION_NEVER)
     logoutMenuItem?.setOnMenuItemClickListener { handleLogout() }
-
     return true
   }
 
