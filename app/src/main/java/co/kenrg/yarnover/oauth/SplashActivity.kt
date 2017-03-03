@@ -8,7 +8,6 @@ import co.kenrg.yarnover.R
 import co.kenrg.yarnover.facets.hotrightnow.HotRightNowActivity
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.onClick
 import org.jetbrains.anko.uiThread
 
 class SplashActivity : AppCompatActivity() {
@@ -21,7 +20,7 @@ class SplashActivity : AppCompatActivity() {
       startActivity(Intent(this, HotRightNowActivity::class.java))
     } else {
       setContentView(R.layout.activity_splash)
-      loginToRavelry.onClick {
+      loginToRavelry.setOnClickListener {
         getNewAccessToken()
       }
     }
