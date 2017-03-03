@@ -16,6 +16,7 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
+import co.kenrg.yarnover.api.domain.Pattern
 import co.kenrg.yarnover.ext.actionBarSize
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
@@ -36,7 +37,7 @@ import org.jetbrains.anko.wrapContent
 
 class HotRightNowActivity : AppCompatActivity() {
   private val ravelryApi = api()
-  private val patternsAdapter = PatternDelegatorAdapter()
+  private val patternsAdapter = PatternDelegatorAdapter({ this.handleSelectPattern(it) })
 
   lateinit private var patternList: RecyclerView
   private var currentPage = 0
@@ -95,6 +96,7 @@ class HotRightNowActivity : AppCompatActivity() {
 
       uiThread {
         if (!response.isSuccessful) {
+          // TODO - Replace this with snackbar, prompting user to retry request
           Toast.makeText(this@HotRightNowActivity, "Error fetching patterns...", LENGTH_LONG).show()
         } else {
           currentPage = page
@@ -120,5 +122,9 @@ class HotRightNowActivity : AppCompatActivity() {
     startActivity(Intent(this, SplashActivity::class.java))
     finish()
     return true
+  }
+
+  fun handleSelectPattern(pattern: Pattern) {
+    Toast.makeText(this, "Selected ${pattern.name}", LENGTH_LONG).show()
   }
 }

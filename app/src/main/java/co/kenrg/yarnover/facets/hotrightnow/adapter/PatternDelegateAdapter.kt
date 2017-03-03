@@ -2,20 +2,23 @@ package co.kenrg.yarnover.facets.hotrightnow.adapter
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.domain.Pattern
 import co.kenrg.yarnover.ext.loadImg
 import co.kenrg.yarnover.iface.adapter.DelegateAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 
-class PatternDelegateAdapter : DelegateAdapter<ViewItem> {
+class PatternDelegateAdapter(
+    val onPatternClick: (Pattern) -> Unit
+) : DelegateAdapter<ViewItem> {
   override fun onCreateViewHolder(parent: ViewGroup) =
       PatternViewHolder(PatternItemComponent(parent))
 
@@ -26,28 +29,32 @@ class PatternDelegateAdapter : DelegateAdapter<ViewItem> {
       val patternItemComponent: PatternItemComponent
   ) : RecyclerView.ViewHolder(patternItemComponent.inflate()) {
     fun bind(item: ViewItem.Pattern) {
-      patternItemComponent.bindPattern(item.pattern)
+      patternItemComponent.bindPattern(item.pattern, onPatternClick)
     }
   }
 
   class PatternItemComponent(val parent: ViewGroup) : AnkoComponent<ViewGroup> {
+    lateinit var card: CardView
     lateinit var title: TextView
     lateinit var author: TextView
     lateinit var image: ImageView
 
     fun inflate() = createView(AnkoContext.create(parent.context, parent))
 
-    fun bindPattern(pattern: Pattern) {
+    fun bindPattern(pattern: Pattern, onPatternClick: (Pattern) -> Unit) {
       this.title.text = pattern.name
       this.author.text = "by ${pattern.designer.name}"
       this.image.loadImg(pattern.firstPhoto.squareUrl)
+      this.card.onClick {
+        onPatternClick(pattern)
+      }
     }
 
     override fun createView(ui: AnkoContext<ViewGroup>): View {
       val imageViewId = 1
 
       return with(ui) {
-        cardView {
+        card = cardView(R.style.AppTheme_CardView) {
           layoutParams = FrameLayout.LayoutParams(matchParent, dip(120)).apply {
             setMargins(dip(12), dip(12), dip(12), 0)
           }
@@ -66,20 +73,12 @@ class PatternDelegateAdapter : DelegateAdapter<ViewItem> {
             verticalLayout {
               padding = dip(8)
 
-              title = textView {
-                textColor = Color.parseColor("#040404")
-                textSize = 16f
-                setLines(1)
-                ellipsize = TextUtils.TruncateAt.END
-                typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
+              title = textView(R.style.AppTheme_CardViewTitleText) {
+                typeface = sansSerifLight(Typeface.NORMAL)
               }
 
-              author = textView {
-                textColor = Color.parseColor("#333333")
-                textSize = 12f
-                setLines(1)
-                ellipsize = TextUtils.TruncateAt.END
-                typeface = Typeface.create("sans-serif-light", Typeface.ITALIC)
+              author = textView(R.style.AppTheme_CardViewSubtitleText) {
+                typeface = sansSerifLight(Typeface.ITALIC)
               }
             }.lparams(height = dip(120)) {
               rightOf(image)
@@ -87,7 +86,10 @@ class PatternDelegateAdapter : DelegateAdapter<ViewItem> {
             }
           }
         }
+        card
       }
     }
   }
 }
+
+private fun TextView.sansSerifLight(style: Int) = Typeface.create("sans-serif-light", style)

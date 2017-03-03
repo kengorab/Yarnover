@@ -2,12 +2,15 @@ package co.kenrg.yarnover.facets.hotrightnow.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import co.kenrg.yarnover.api.domain.Pattern
 
-class PatternDelegatorAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PatternDelegatorAdapter(
+    onPatternClick: (Pattern) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
   private var items = arrayListOf<ViewItem>(ViewItem.Loading)
 
   private val loadingDelegateAdapter = LoadingDelegateAdapter()
-  private val patternDelegateAdapter = PatternDelegateAdapter()
+  private val patternDelegateAdapter = PatternDelegateAdapter(onPatternClick)
 
   private fun delegateForViewType(viewType: ViewItem.ViewType) = when (viewType) {
     ViewItem.ViewType.LOADING -> loadingDelegateAdapter
