@@ -117,7 +117,7 @@ class HotRightNowActivity : AppCompatActivity() {
       val navigation = decorView.findViewById(android.R.id.navigationBarBackground)
       val navigationPair = Pair.create<View, String>(navigation, navigation.transitionName)
 
-      val pair = Pair.create(patternView.previewImage as View, "transition_target_img")
+      val pair = Pair.create(patternView.previewImage as View, getString(R.string.transition_preview_image))
       val animation = ActivityOptions.makeSceneTransitionAnimation(this, pair, statusBarPair, navigationPair)
       return animation.toBundle()
     } else {

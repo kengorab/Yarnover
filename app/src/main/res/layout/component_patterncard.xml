@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/patternCard"
     android:layout_width="match_parent"
     android:layout_height="120dp"
@@ -12,43 +13,61 @@
     android:orientation="vertical"
     app:cardElevation="2dp">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <ImageView
             android:id="@+id/previewImage"
             android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
             android:background="@android:color/transparent"
+            android:contentDescription="Preview for pattern"
             android:transitionName="@string/transition.preview_image"
-            android:contentDescription="Preview for pattern"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="120dp"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/previewImage"
-            android:orientation="vertical"
-            android:padding="8dp">
 
-            <TextView
-                android:id="@+id/patternTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:theme="@style/AppTheme.CardViewTitleText"/>
+        <TextView
+            android:id="@+id/patternTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-light"
+            android:theme="@style/AppTheme.CardViewTitleText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/previewImage"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
-                android:id="@+id/patternAuthor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:textStyle="italic"
-                android:theme="@style/AppTheme.CardViewSubtitleText"/>
+        <TextView
+            android:id="@+id/patternAuthor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="0dp"
+            android:fontFamily="sans-serif-light"
+            android:textStyle="italic"
+            android:theme="@style/AppTheme.CardViewSubtitleText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/previewImage"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/patternTitle"
+            tools:layout_conversion_absoluteHeight="14dp"
+            tools:layout_conversion_absoluteWidth="251dp"
+            tools:layout_conversion_absoluteX="128dp"
+            tools:layout_conversion_absoluteY="27dp"/>
 
-        </LinearLayout>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
