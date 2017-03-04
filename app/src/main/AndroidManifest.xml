@@ -21,6 +21,9 @@
         <activity android:name=".oauth.OAuthActivity"/>
         <activity android:name=".oauth.AuthenticateActivity"/>
         <activity android:name=".facets.hotrightnow.HotRightNowActivity"/>
+        <activity
+            android:name=".facets.patterndetails.PatternDetailsActivity"
+            android:parentActivityName=".facets.hotrightnow.HotRightNowActivity"/>
     </application>
 
 </manifest>

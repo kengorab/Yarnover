@@ -3,7 +3,6 @@ package co.kenrg.yarnover.facets.hotrightnow.adapter
 import android.os.Parcel
 import co.kenrg.yarnover.iface.adapter.DelegateViewItem
 import co.kenrg.yarnover.iface.parcelable.DefaultParcelable
-import co.kenrg.yarnover.iface.parcelable.read
 
 sealed class ViewItem(viewType: ViewType) : DelegateViewItem<ViewItem.ViewType>(viewType) {
   enum class ViewType(val type: Int) {
@@ -23,7 +22,7 @@ sealed class ViewItem(viewType: ViewType) : DelegateViewItem<ViewItem.ViewType>(
   ) : ViewItem(ViewType.PATTERN), DefaultParcelable {
     companion object {
       @JvmField val CREATOR = DefaultParcelable.generateCreator {
-        Pattern(it.read(), it.read(), it.read(), it.read())
+        Pattern(it.readLong(), it.readString(), it.readString(), it.readString())
       }
     }
 

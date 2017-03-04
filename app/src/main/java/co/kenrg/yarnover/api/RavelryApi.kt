@@ -1,5 +1,6 @@
 package co.kenrg.yarnover.api
 
+import co.kenrg.yarnover.api.domain.PatternDetails
 import co.kenrg.yarnover.api.query.Availability
 import co.kenrg.yarnover.api.query.SortOrder
 import co.kenrg.yarnover.api.query.YesOrNo
@@ -8,6 +9,7 @@ import co.kenrg.yarnover.api.response.CurrentUserResponse
 import co.kenrg.yarnover.api.response.PaginatedPatternsResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RavelryApi {
@@ -21,6 +23,13 @@ interface RavelryApi {
       @Query("page_size") pageSize: Int = 25,
       @Query("photo") hasPhoto: YesOrNo = YES,
       @Query("sort") sort: SortOrder = SortOrder.HOT_RIGHT_NOW,
-      @Query("availability") availability: Availability = Availability.FREE
+      @Query("availability") availability: Availability = Availability.FREE,
+      @Query("debug") debug: Int = 1
   ): Call<PaginatedPatternsResponse>
+
+  @GET("patterns/{id}.json")
+  fun getPatternById(
+      @Path("id") patternId: Long,
+      @Query("debug") debug: Int = 1
+  ): Call<PatternDetails>
 }

@@ -12,6 +12,8 @@ import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
+import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity
+import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity.Companion.KEY_PATTERN_DATA
 import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
 import co.kenrg.yarnover.oauth.OAuthManager
 import co.kenrg.yarnover.oauth.SplashActivity
@@ -87,7 +89,9 @@ class HotRightNowActivity : AppCompatActivity() {
   }
 
   fun handleSelectPattern(pattern: ViewItem.Pattern) {
-    Toast.makeText(this, "Selected ${pattern.patternName}", LENGTH_LONG).show()
+    val intent = Intent(this, PatternDetailsActivity::class.java)
+    intent.putExtra(KEY_PATTERN_DATA, pattern)
+    startActivity(intent)
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {

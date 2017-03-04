@@ -13,6 +13,3 @@ interface DefaultParcelable : Parcelable {
     }
   }
 }
-
-inline fun <reified T> Parcel.read(): T = readValue(T::class.javaClass.classLoader) as T
-fun Parcel.write(vararg values: Any?) = values.forEach { writeValue(it) }
