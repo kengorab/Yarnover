@@ -10,7 +10,6 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
-import co.kenrg.yarnover.api.domain.Pattern
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
@@ -22,10 +21,18 @@ import org.jetbrains.anko.uiThread
 
 class HotRightNowActivity : AppCompatActivity() {
   private val activity: HotRightNowActivity = this
+  private val parcelKey = "HOT_RIGHT_NOW_ACTIVITY_PARCEL"
   private val ravelryApi = api()
   private val patternsAdapter = PatternDelegatorAdapter({ this.handleSelectPattern(it) })
 
   private var currentPage = 0
+
+  override fun onSaveInstanceState(outState: Bundle?) {
+    super.onSaveInstanceState(outState)
+    val patterns = patternsAdapter.getPatterns()
+    if (patterns.isNotEmpty())
+      outState?.putParcelable(parcelKey, HotRightNowParcel(currentPage, patterns))
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -48,7 +55,13 @@ class HotRightNowActivity : AppCompatActivity() {
       })
     }
 
-    requestPatterns(currentPage + 1)
+    if (savedInstanceState != null && savedInstanceState.containsKey(parcelKey)) {
+      val parcel = savedInstanceState.get(parcelKey) as HotRightNowParcel
+      currentPage = parcel.currentPage
+      patternsAdapter.replaceWithPatterns(parcel.patterns)
+    } else {
+      requestPatterns(currentPage + 1)
+    }
   }
 
   fun requestPatterns(page: Int) {
@@ -63,13 +76,18 @@ class HotRightNowActivity : AppCompatActivity() {
           Toast.makeText(this@HotRightNowActivity, "Error fetching patterns...", LENGTH_LONG).show()
         } else {
           currentPage = page
-          val patternViewItems = response.body().patterns.map { pattern ->
-            ViewItem.Pattern(pattern)
-          }
+          val patternViewItems = response.body().patterns
+              .map { (id, name, _, firstPhoto, designer) ->
+                ViewItem.Pattern(id, name, designer.name, firstPhoto.squareUrl)
+              }
           patternsAdapter.addPatterns(patternViewItems)
         }
       }
     }
+  }
+
+  fun handleSelectPattern(pattern: ViewItem.Pattern) {
+    Toast.makeText(this, "Selected ${pattern.patternName}", LENGTH_LONG).show()
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,9 +102,5 @@ class HotRightNowActivity : AppCompatActivity() {
     startActivity(Intent(this, SplashActivity::class.java))
     finish()
     return true
-  }
-
-  fun handleSelectPattern(pattern: Pattern) {
-    Toast.makeText(this, "Selected ${pattern.name}", LENGTH_LONG).show()
   }
 }

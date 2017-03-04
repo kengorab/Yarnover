@@ -2,10 +2,9 @@ package co.kenrg.yarnover.facets.hotrightnow.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import co.kenrg.yarnover.api.domain.Pattern
 
 class PatternDelegatorAdapter(
-    onPatternClick: (Pattern) -> Unit
+    onPatternClick: (ViewItem.Pattern) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
   private var items = arrayListOf<ViewItem>(ViewItem.Loading)
 
