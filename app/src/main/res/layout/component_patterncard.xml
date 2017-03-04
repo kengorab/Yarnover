@@ -20,7 +20,8 @@
             android:id="@+id/previewImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:background="@color/lightGray"
+            android:background="@android:color/transparent"
+            android:transitionName="@string/transition.preview_image"
             android:contentDescription="Preview for pattern"/>
 
         <LinearLayout

@@ -1,11 +1,16 @@
 package co.kenrg.yarnover.facets.hotrightnow
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem.SHOW_AS_ACTION_NEVER
+import android.view.View
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
@@ -18,6 +23,7 @@ import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
 import co.kenrg.yarnover.oauth.OAuthManager
 import co.kenrg.yarnover.oauth.SplashActivity
 import kotlinx.android.synthetic.main.activity_hotrightnow.*
+import kotlinx.android.synthetic.main.component_patterncard.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -25,7 +31,9 @@ class HotRightNowActivity : AppCompatActivity() {
   private val activity: HotRightNowActivity = this
   private val parcelKey = "HOT_RIGHT_NOW_ACTIVITY_PARCEL"
   private val ravelryApi = api()
-  private val patternsAdapter = PatternDelegatorAdapter({ this.handleSelectPattern(it) })
+  private val patternsAdapter = PatternDelegatorAdapter(onPatternClick = { item, view ->
+    this.handleSelectPattern(item, view)
+  })
 
   private var currentPage = 0
 
@@ -80,7 +88,9 @@ class HotRightNowActivity : AppCompatActivity() {
           currentPage = page
           val patternViewItems = response.body().patterns
               .map { (id, name, _, firstPhoto, designer) ->
-                ViewItem.Pattern(id, name, designer.name, firstPhoto.squareUrl)
+                val photoUrl = firstPhoto.mediumUrl ?: firstPhoto.medium2Url ?: firstPhoto.squareUrl
+                Log.d("HRN", "$name, photoUrl: $photoUrl")
+                ViewItem.Pattern(id, name, designer.name, photoUrl)
               }
           patternsAdapter.addPatterns(patternViewItems)
         }
@@ -88,10 +98,31 @@ class HotRightNowActivity : AppCompatActivity() {
     }
   }
 
-  fun handleSelectPattern(pattern: ViewItem.Pattern) {
+  fun handleSelectPattern(pattern: ViewItem.Pattern, view: View) {
     val intent = Intent(this, PatternDetailsActivity::class.java)
     intent.putExtra(KEY_PATTERN_DATA, pattern)
-    startActivity(intent)
+
+    val bundle = getSharedElementTransitionBundle(view)
+    if (bundle != null)
+      startActivity(intent, bundle)
+    else
+      startActivity(intent)
+  }
+
+  private fun getSharedElementTransitionBundle(patternView: View): Bundle? {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      val decorView = window.decorView
+      val statusBackground = decorView.findViewById(android.R.id.statusBarBackground)
+      val statusBarPair = Pair.create<View, String>(statusBackground, statusBackground.transitionName)
+      val navigation = decorView.findViewById(android.R.id.navigationBarBackground)
+      val navigationPair = Pair.create<View, String>(navigation, navigation.transitionName)
+
+      val pair = Pair.create(patternView.previewImage as View, "transition_target_img")
+      val animation = ActivityOptions.makeSceneTransitionAnimation(this, pair, statusBarPair, navigationPair)
+      return animation.toBundle()
+    } else {
+      return null
+    }
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {

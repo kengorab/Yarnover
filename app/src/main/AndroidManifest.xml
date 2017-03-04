@@ -22,7 +22,9 @@
         <activity android:name=".oauth.AuthenticateActivity"/>
         <activity android:name=".facets.hotrightnow.HotRightNowActivity"/>
         <activity
+            android:theme="@style/AppTheme.BlackStatusBar"
             android:name=".facets.patterndetails.PatternDetailsActivity"
+            android:label=""
             android:parentActivityName=".facets.hotrightnow.HotRightNowActivity"/>
     </application>
 

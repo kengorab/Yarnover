@@ -9,7 +9,7 @@ import co.kenrg.yarnover.ext.loadImg
 import co.kenrg.yarnover.iface.adapter.DelegateAdapter
 import kotlinx.android.synthetic.main.component_patterncard.view.*
 
-class PatternDelegateAdapter(val onPatternClick: (ViewItem.Pattern) -> Unit) : DelegateAdapter<ViewItem> {
+class PatternDelegateAdapter(val onPatternClick: (ViewItem.Pattern, View) -> Unit) : DelegateAdapter<ViewItem> {
   override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
     return PatternViewHolder(layoutInflater.inflate(R.layout.component_patterncard, parent, false))
@@ -22,11 +22,11 @@ class PatternDelegateAdapter(val onPatternClick: (ViewItem.Pattern) -> Unit) : D
   }
 
   class PatternViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-    fun bind(pattern: ViewItem.Pattern, onPatternClick: (ViewItem.Pattern) -> Unit) {
+    fun bind(pattern: ViewItem.Pattern, onPatternClick: (ViewItem.Pattern, View) -> Unit) {
       view.patternTitle.text = pattern.patternName
       view.patternAuthor.text = "by ${pattern.designerName}"
       view.previewImage.loadImg(pattern.photoUrl)
-      view.patternCard.setOnClickListener { onPatternClick(pattern) }
+      view.patternCard.setOnClickListener { onPatternClick(pattern, view) }
     }
   }
 }

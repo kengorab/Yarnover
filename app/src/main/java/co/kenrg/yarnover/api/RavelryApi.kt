@@ -1,12 +1,12 @@
 package co.kenrg.yarnover.api
 
-import co.kenrg.yarnover.api.domain.PatternDetails
 import co.kenrg.yarnover.api.query.Availability
 import co.kenrg.yarnover.api.query.SortOrder
 import co.kenrg.yarnover.api.query.YesOrNo
 import co.kenrg.yarnover.api.query.YesOrNo.YES
 import co.kenrg.yarnover.api.response.CurrentUserResponse
 import co.kenrg.yarnover.api.response.PaginatedPatternsResponse
+import co.kenrg.yarnover.api.response.PatternDetailsResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -31,5 +31,5 @@ interface RavelryApi {
   fun getPatternById(
       @Path("id") patternId: Long,
       @Query("debug") debug: Int = 1
-  ): Call<PatternDetails>
+  ): Call<PatternDetailsResponse>
 }

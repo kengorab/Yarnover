@@ -3,9 +3,17 @@ package co.kenrg.yarnover.facets.patterndetails
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
+import co.kenrg.yarnover.api.ApiManager.api
+import co.kenrg.yarnover.api.domain.PatternDetails
+import co.kenrg.yarnover.ext.loadImg
+import co.kenrg.yarnover.ext.startPostponedTransition
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import kotlinx.android.synthetic.main.activity_patterndetails.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class PatternDetailsActivity : AppCompatActivity() {
   companion object {
@@ -13,14 +21,15 @@ class PatternDetailsActivity : AppCompatActivity() {
   }
 
   private val activity: PatternDetailsActivity = this
+  private val ravelryApi = api()
+  private lateinit var patternDetails: PatternDetails
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_patterndetails)
+    supportPostponeEnterTransition()
 
-    if (!intent.hasExtra(KEY_PATTERN_DATA))
-      finish()
-
+    if (!intent.hasExtra(KEY_PATTERN_DATA)) finish()
     val basicPatternInfo = intent.getParcelableExtra<ViewItem.Pattern>(KEY_PATTERN_DATA)
 
     toolbar.apply {
@@ -28,7 +37,24 @@ class PatternDetailsActivity : AppCompatActivity() {
       activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    activity.supportActionBar?.title = basicPatternInfo.patternName
+    image.loadImg(basicPatternInfo.photoUrl, onSuccess = { it.startPostponedTransition(this) })
+    requestPatternDetails(basicPatternInfo.id)
+  }
+
+  fun requestPatternDetails(id: Long) {
+    doAsync {
+      Thread.sleep(1000)
+      val response = ravelryApi.getPatternById(id).execute()
+
+      uiThread {
+        if (!response.isSuccessful) {
+          // TODO - Replace this with snackbar, prompting user to retry request
+          Toast.makeText(this@PatternDetailsActivity, "Error fetching pattern details...", LENGTH_LONG).show()
+        } else {
+          patternDetails = response.body().pattern
+        }
+      }
+    }
   }
 
   override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

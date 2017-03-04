@@ -10,7 +10,7 @@ data class PatternDetails(
     @Json(name = "currency") val currency: String,
     @Json(name = "currency_symbol") val currencySymbol: String?,
     @Json(name = "difficulty_average") val avgDifficulty: Float,
-    @Json(name = "difficulty_count") val numDifficultyVotes: Int,
+    @Json(name = "difficulty_count") val numDifficultyVotes: Int?,
     @Json(name = "download_location") val downloadLocation: DownloadLocation,
     @Json(name = "downloadable") val isDownloadable: Boolean,
     @Json(name = "favorites_count") val numFavorites: Int,
@@ -24,7 +24,7 @@ data class PatternDetails(
 //    @Json(name = "pattern_attributes") val patternAttributes: List<Any>, // TODO - PatternAttribute type
     @Json(name = "pattern_author") val patternAuthor: PatternAuthor,
     @Json(name = "pattern_categories") val patternCategories: List<PatternCategory>,
-    @Json(name = "pattern_needle_sizes") val patternNeedleSizes: String,
+    @Json(name = "pattern_needle_sizes") val patternNeedleSizes: List<Map<String, Any>>,
     @Json(name = "pdf_in_library") val isPdfInLibrary: Boolean,
     @Json(name = "pdf_url") val pdfUrl: String,
     @Json(name = "permalink") val permalink: String,
