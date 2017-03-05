@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -65,10 +66,118 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lorem"/>
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <TextView
+                android:id="@+id/patternName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="qwer"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textColor="?android:textColorPrimary"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/authorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="0dp"
+                android:fontFamily="sans-serif-light"
+                android:text="asdf"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="?android:textColorSecondary"
+                android:textStyle="italic"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/patternName"/>
+
+            <Button
+                android:id="@+id/castOnButton"
+                style="@style/AppTheme.IconButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:drawableTop="@drawable/ic_cast_on"
+                android:gravity="center_horizontal"
+                android:text="Cast On"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
+                app:layout_constraintLeft_toRightOf="@+id/libraryButton"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/libraryButton"/>
+
+            <Button
+                android:id="@+id/libraryButton"
+                style="@style/AppTheme.IconButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:drawableTop="@drawable/ic_library_add"
+                android:gravity="center_horizontal"
+                android:text="Add&#10;to Library"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
+                app:layout_constraintLeft_toRightOf="@+id/queueButton"
+                app:layout_constraintRight_toLeftOf="@+id/castOnButton"
+                app:layout_constraintTop_toTopOf="@+id/queueButton"
+                app:layout_constraintVertical_bias="0.0"/>
+
+            <Button
+                android:id="@+id/queueButton"
+                style="@style/AppTheme.IconButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:drawableTop="@drawable/ic_queue_add"
+                android:gravity="center_horizontal"
+                android:text="Add&#10;to Queue"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
+                app:layout_constraintLeft_toRightOf="@+id/favoriteButton"
+                app:layout_constraintRight_toLeftOf="@+id/libraryButton"
+                app:layout_constraintTop_toTopOf="@+id/favoriteButton"
+                app:layout_constraintVertical_bias="0.0"/>
+
+            <Button
+                android:id="@+id/favoriteButton"
+                style="@style/AppTheme.IconButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="8dp"
+                android:drawableTop="@drawable/ic_favorite_border"
+                android:gravity="center_horizontal"
+                android:text="Add&#10;to Favorites"
+                android:textSize="10sp"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/queueButton"
+                app:layout_constraintTop_toBottomOf="@+id/authorName"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:background="#ddd"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/favoriteButton"/>
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

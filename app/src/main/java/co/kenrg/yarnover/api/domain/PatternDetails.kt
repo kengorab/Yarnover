@@ -36,7 +36,7 @@ data class PatternDetails(
     @Json(name = "published") val published: String,
     @Json(name = "queued_projects_count") val numQueuedProjects: Int,
     @Json(name = "rating_average") val avgRating: Float,
-    @Json(name = "rating_count") val numRatings: Int,
+    @Json(name = "rating_count") val numRatings: Int?,
     @Json(name = "ravelry_download") val isRavelryDownload: Boolean,
     @Json(name = "row_gauge") val rowGauge: String,
     @Json(name = "sizes_available") val sizesAvailable: String,

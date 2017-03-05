@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.IconButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:drawableTint">#777777</item>
+    </style>
+</resources>
