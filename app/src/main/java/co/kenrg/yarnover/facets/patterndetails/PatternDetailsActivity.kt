@@ -1,5 +1,6 @@
 package co.kenrg.yarnover.facets.patterndetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -12,6 +13,10 @@ import co.kenrg.yarnover.api.domain.PatternDetails
 import co.kenrg.yarnover.ext.loadImg
 import co.kenrg.yarnover.ext.startPostponedTransition
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
+import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity
+import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_DESIGNER_NAME
+import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_DOWNLOAD_URL
+import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_NAME
 import kotlinx.android.synthetic.main.activity_patterndetails.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -41,10 +46,8 @@ class PatternDetailsActivity : AppCompatActivity() {
     patternName.text = basicPatternInfo.patternName
     authorName.text = basicPatternInfo.designerName
 
-    favoriteButton.setOnClickListener { handleFavoriteClicked() }
-    queueButton.setOnClickListener { handleQueueClicked() }
-    libraryButton.setOnClickListener { handleLibraryClicked() }
-    castOnButton.setOnClickListener { handleCastOnClicked() }
+    openPattern.setOnClickListener { handleOpenPattern() }
+    downloadPdf.setOnClickListener { handleDownloadPdf() }
 
     image.loadImg(basicPatternInfo.photoUrl, onSuccess = { it.startPostponedTransition(this) })
     requestPatternDetails(basicPatternInfo.id)
@@ -66,20 +69,16 @@ class PatternDetailsActivity : AppCompatActivity() {
     }
   }
 
-  fun handleFavoriteClicked() {
-    Toast.makeText(this, "${patternDetails.name} Favorited!", LENGTH_SHORT).show()
+  fun handleOpenPattern() {
+    val intent = Intent(this, PatternPDFViewActivity::class.java)
+    intent.putExtra(KEY_PATTERN_NAME, patternDetails.name)
+    intent.putExtra(KEY_PATTERN_DESIGNER_NAME, patternDetails.patternAuthor.name)
+    intent.putExtra(KEY_PATTERN_DOWNLOAD_URL, patternDetails.downloadLocation.url)
+    startActivity(intent)
   }
 
-  fun handleQueueClicked() {
-    Toast.makeText(this, "${patternDetails.name} added to Queue!", LENGTH_SHORT).show()
-  }
-
-  fun handleLibraryClicked() {
-    Toast.makeText(this, "${patternDetails.name} added to Library!", LENGTH_SHORT).show()
-  }
-
-  fun handleCastOnClicked() {
-    Toast.makeText(this, "${patternDetails.name} cast on!", LENGTH_SHORT).show()
+  fun handleDownloadPdf() {
+    Toast.makeText(this, "Download pattern: ${patternDetails.name}", LENGTH_SHORT).show()
   }
 
   override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

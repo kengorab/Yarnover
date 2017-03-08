@@ -44,7 +44,7 @@ data class PatternDetails(
     @Json(name = "volumes_in_library") val volumesInLibrary: List<Int>,
     @Json(name = "yardage") val yardage: Int,
     @Json(name = "yardage_description") val yardageDesc: String,
-    @Json(name = "yardage_max") val maxYardage: Int,
+    @Json(name = "yardage_max") val maxYardage: Int?,
     @Json(name = "yarn_weight") val yarnWeight: YarnWeight,
     @Json(name = "yarn_weight_description") val yarnWeightDesc: String
 )

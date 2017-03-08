@@ -11,6 +11,7 @@
     </style>
 
     <style name="AppTheme.IconButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">#777777</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

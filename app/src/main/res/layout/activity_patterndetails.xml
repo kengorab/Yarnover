@@ -60,6 +60,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundColor"
@@ -74,25 +75,27 @@
 
             <TextView
                 android:id="@+id/patternName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-light"
-                android:text="qwer"
+                android:gravity="start"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="?android:textColorPrimary"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
             <TextView
                 android:id="@+id/authorName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginStart="16dp"
                 android:fontFamily="sans-serif-light"
-                android:text="asdf"
+                android:gravity="start"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="?android:textColorSecondary"
                 android:textStyle="italic"
@@ -100,85 +103,58 @@
                 app:layout_constraintTop_toBottomOf="@+id/patternName"/>
 
             <Button
-                android:id="@+id/castOnButton"
+                android:id="@+id/downloadPdf"
                 style="@style/AppTheme.IconButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
                 android:layout_marginTop="0dp"
-                android:drawableTop="@drawable/ic_cast_on"
-                android:gravity="center_horizontal"
-                android:text="Cast On"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
-                app:layout_constraintLeft_toRightOf="@+id/libraryButton"
+                android:drawablePadding="12dp"
+                android:drawableTop="@drawable/ic_file_download"
+                android:padding="16dp"
+                android:text="Download PDF"
+                app:layout_constraintLeft_toRightOf="@+id/openPattern"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/libraryButton"/>
+                app:layout_constraintTop_toTopOf="@+id/openPattern"/>
 
             <Button
-                android:id="@+id/libraryButton"
+                android:id="@+id/openPattern"
                 style="@style/AppTheme.IconButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginTop="0dp"
-                android:drawableTop="@drawable/ic_library_add"
-                android:gravity="center_horizontal"
-                android:text="Add&#10;to Library"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
-                app:layout_constraintLeft_toRightOf="@+id/queueButton"
-                app:layout_constraintRight_toLeftOf="@+id/castOnButton"
-                app:layout_constraintTop_toTopOf="@+id/queueButton"
-                app:layout_constraintVertical_bias="0.0"/>
-
-            <Button
-                android:id="@+id/queueButton"
-                style="@style/AppTheme.IconButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginTop="0dp"
-                android:drawableTop="@drawable/ic_queue_add"
-                android:gravity="center_horizontal"
-                android:text="Add&#10;to Queue"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@+id/favoriteButton"
-                app:layout_constraintLeft_toRightOf="@+id/favoriteButton"
-                app:layout_constraintRight_toLeftOf="@+id/libraryButton"
-                app:layout_constraintTop_toTopOf="@+id/favoriteButton"
-                app:layout_constraintVertical_bias="0.0"/>
-
-            <Button
-                android:id="@+id/favoriteButton"
-                style="@style/AppTheme.IconButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0dp"
                 android:layout_marginTop="8dp"
-                android:drawableTop="@drawable/ic_favorite_border"
-                android:gravity="center_horizontal"
-                android:text="Add&#10;to Favorites"
-                android:textSize="10sp"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                android:drawablePadding="12dp"
+                android:drawableTop="@drawable/ic_file"
+                android:padding="16dp"
+                android:text="Open Pattern"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/queueButton"
+                app:layout_constraintRight_toLeftOf="@+id/downloadPdf"
                 app:layout_constraintTop_toBottomOf="@+id/authorName"/>
 
             <View
-                android:layout_width="fill_parent"
+                android:id="@+id/view"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
                 android:layout_marginTop="0dp"
                 android:background="#ddd"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favoriteButton"/>
+                app:layout_constraintTop_toBottomOf="@+id/openPattern"/>
 
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fabAdd"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="16dp"-->
+    <!--android:clickable="true"-->
+    <!--android:tint="@android:color/white"-->
+    <!--app:fabSize="normal"-->
+    <!--app:layout_anchor="@+id/app_bar_layout"-->
+    <!--app:layout_anchorGravity="bottom|right|end"-->
+    <!--app:srcCompat="@drawable/ic_plus"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

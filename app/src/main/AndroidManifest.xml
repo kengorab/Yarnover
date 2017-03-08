@@ -22,10 +22,11 @@
         <activity android:name=".oauth.AuthenticateActivity"/>
         <activity android:name=".facets.hotrightnow.HotRightNowActivity"/>
         <activity
-            android:theme="@style/AppTheme.BlackStatusBar"
             android:name=".facets.patterndetails.PatternDetailsActivity"
             android:label=""
-            android:parentActivityName=".facets.hotrightnow.HotRightNowActivity"/>
+            android:parentActivityName=".facets.hotrightnow.HotRightNowActivity"
+            android:theme="@style/AppTheme.BlackStatusBar"/>
+        <activity android:name=".facets.patternview.PatternPDFViewActivity"/>
     </application>
 
 </manifest>

@@ -44,6 +44,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-moshi:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
+    compile 'com.github.barteksc:android-pdf-viewer:2.4.0'
+
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
