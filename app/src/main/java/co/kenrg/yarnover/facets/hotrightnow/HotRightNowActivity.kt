@@ -28,8 +28,11 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 class HotRightNowActivity : AppCompatActivity() {
+  companion object {
+    private val KEY_PARCEL = "HOT_RIGHT_NOW_ACTIVITY_PARCEL"
+  }
+
   private val activity: HotRightNowActivity = this
-  private val parcelKey = "HOT_RIGHT_NOW_ACTIVITY_PARCEL"
   private val ravelryApi = api()
   private val patternsAdapter = PatternDelegatorAdapter(onPatternClick = { item, view ->
     this.handleSelectPattern(item, view)
@@ -41,7 +44,7 @@ class HotRightNowActivity : AppCompatActivity() {
     super.onSaveInstanceState(outState)
     val patterns = patternsAdapter.getPatterns()
     if (patterns.isNotEmpty())
-      outState?.putParcelable(parcelKey, HotRightNowParcel(currentPage, patterns))
+      outState?.putParcelable(KEY_PARCEL, HotRightNowParcel(currentPage, patterns))
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +68,8 @@ class HotRightNowActivity : AppCompatActivity() {
       })
     }
 
-    if (savedInstanceState != null && savedInstanceState.containsKey(parcelKey)) {
-      val parcel = savedInstanceState.get(parcelKey) as HotRightNowParcel
+    if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PARCEL)) {
+      val parcel = savedInstanceState.get(KEY_PARCEL) as HotRightNowParcel
       currentPage = parcel.currentPage
       patternsAdapter.replaceWithPatterns(parcel.patterns)
     } else {

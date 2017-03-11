@@ -67,81 +67,96 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/patternName"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-light"
                 android:gravity="start"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textColor="?android:textColorPrimary"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                android:textColor="?android:textColorPrimary"/>
 
             <TextView
                 android:id="@+id/authorName"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
                 android:fontFamily="sans-serif-light"
                 android:gravity="start"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="?android:textColorSecondary"
-                android:textStyle="italic"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/patternName"/>
+                android:textStyle="italic"/>
 
-            <Button
-                android:id="@+id/downloadPdf"
-                style="@style/AppTheme.IconButton"
-                android:layout_width="0dp"
+            <ProgressBar
+                android:id="@+id/detailsLoading"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:drawablePadding="12dp"
-                android:drawableTop="@drawable/ic_file_download"
-                android:padding="16dp"
-                android:text="Download PDF"
-                app:layout_constraintLeft_toRightOf="@+id/openPattern"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/openPattern"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"/>
 
-            <Button
-                android:id="@+id/openPattern"
-                style="@style/AppTheme.IconButton"
-                android:layout_width="0dp"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/detailsContainer"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:drawablePadding="12dp"
-                android:drawableTop="@drawable/ic_file"
-                android:padding="16dp"
-                android:text="Open Pattern"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/downloadPdf"
-                app:layout_constraintTop_toBottomOf="@+id/authorName"/>
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp">
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="0dp"
-                android:background="#ddd"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/openPattern"/>
+                <Button
+                    android:id="@+id/downloadPdf"
+                    style="@style/AppTheme.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="12dp"
+                    android:drawableTop="@drawable/ic_file_download"
+                    android:padding="16dp"
+                    android:text="Download PDF"
+                    app:layout_constraintLeft_toRightOf="@+id/openPattern"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/openPattern"/>
 
-        </android.support.constraint.ConstraintLayout>
+                <Button
+                    android:id="@+id/openPattern"
+                    style="@style/AppTheme.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawablePadding="12dp"
+                    android:drawableTop="@drawable/ic_file"
+                    android:padding="16dp"
+                    android:text="Open Pattern"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/downloadPdf"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="0dp"
+                    android:background="#ddd"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/openPattern"/>
+
+            </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
