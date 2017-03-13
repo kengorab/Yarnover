@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem.SHOW_AS_ACTION_NEVER
@@ -92,7 +91,6 @@ class HotRightNowActivity : AppCompatActivity() {
           val patternViewItems = response.body().patterns
               .map { (id, name, _, firstPhoto, designer) ->
                 val photoUrl = firstPhoto.mediumUrl ?: firstPhoto.medium2Url ?: firstPhoto.squareUrl
-                Log.d("HRN", "$name, photoUrl: $photoUrl")
                 ViewItem.Pattern(id, name, designer.name, photoUrl)
               }
           patternsAdapter.addPatterns(patternViewItems)

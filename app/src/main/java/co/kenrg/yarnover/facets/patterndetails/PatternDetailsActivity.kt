@@ -7,13 +7,16 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.PatternDetails
+import co.kenrg.yarnover.ext.addRow
 import co.kenrg.yarnover.ext.checkPermission
 import co.kenrg.yarnover.ext.downloadFile
+import co.kenrg.yarnover.ext.format
 import co.kenrg.yarnover.ext.loadImg
 import co.kenrg.yarnover.ext.startPostponedTransition
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
@@ -22,6 +25,7 @@ import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_DOWNLOAD_URL
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_NAME
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.MY_PERMISSIONS_REQUEST_WRITE_EXT_STORAGE
+import co.kenrg.yarnover.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_patterndetails.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -36,6 +40,7 @@ class PatternDetailsActivity : AppCompatActivity() {
   private val activity: PatternDetailsActivity = this
   private val ravelryApi = api()
   private var patternDetails: PatternDetailsParcel? = null
+  private var patternDetailsTableExpanded = true
 
   override fun onSaveInstanceState(outState: Bundle?) {
     super.onSaveInstanceState(outState)
@@ -62,7 +67,19 @@ class PatternDetailsActivity : AppCompatActivity() {
     openPattern.setOnClickListener { handleOpenPattern() }
     downloadPdf.setOnClickListener { handleDownloadPdf() }
 
-    image.loadImg(basicPatternInfo.photoUrl, onSuccess = { it.startPostponedTransition(this) })
+    detailsTableToggle.setOnClickListener {
+      detailsTableToggleIcon.animate()
+          .rotationBy(180f)
+          .setInterpolator(AccelerateDecelerateInterpolator())
+          .setDuration(200)
+          .start()
+
+      patternDetailsTable.visibility = if (patternDetailsTableExpanded) View.GONE else View.VISIBLE
+      patternDetailsTable.requestLayout()
+      patternDetailsTableExpanded = !patternDetailsTableExpanded
+    }
+
+    patternImage.loadImg(basicPatternInfo.photoUrl, onSuccess = { it.startPostponedTransition(this) })
 
     if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PARCEL)) {
       val parcel = savedInstanceState.get(KEY_PARCEL) as PatternDetailsParcel
@@ -76,9 +93,51 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun initWithParcel(parcel: PatternDetailsParcel) {
     this.patternDetails = parcel
+    downloadPdf.visibility = if (parcel.urlIsPdf) View.VISIBLE else View.GONE
+    setupPatternDetailsTable()
+
     detailsLoading.visibility = View.GONE
     detailsContainer.visibility = View.VISIBLE
-    downloadPdf.visibility = if (parcel.urlIsPdf) View.VISIBLE else View.GONE
+  }
+
+  fun setupPatternDetailsTable() {
+    patternDetailsTable.removeAllViewsInLayout()
+
+    if (this.patternDetails == null) return
+
+    val patternDetails = this.patternDetails!!
+    val tableRows = arrayListOf<Pair<String, String>>().apply {
+      if (patternDetails.patternSource != null && patternDetails.patternSource.isNotBlank())
+        this.add(Pair("Published In", patternDetails.patternSource))
+
+      if (patternDetails.craft.isNotBlank())
+        this.add(Pair("Craft", patternDetails.craft))
+
+      if (patternDetails.categories.isNotEmpty())
+        this.add(Pair("Categories", patternDetails.categories.joinToString(", ")))
+
+      if (patternDetails.publishedDate.isNotBlank()) {
+        val parsedDate = DateUtils.parse(patternDetails.publishedDate)
+        if (parsedDate != null && parsedDate.format() != null)
+          this.add(Pair("Published", parsedDate.format()!!))
+      }
+
+      if (patternDetails.yarnWeightDesc.isNotBlank())
+        this.add(Pair("Yarn Weight", patternDetails.yarnWeightDesc))
+
+      if (patternDetails.gaugeDesc.isNotBlank())
+        this.add(Pair("Gauge", patternDetails.gaugeDesc))
+
+      if (patternDetails.needleSizes.isNotEmpty())
+        this.add(Pair("Needle Size", patternDetails.needleSizes.joinToString(", ")))
+
+      if (patternDetails.yardageDesc.isNotBlank())
+        this.add(Pair("Yardage", patternDetails.yardageDesc))
+    }
+
+    tableRows.forEach { (col1, col2) ->
+      patternDetailsTable.addRow(col1, col2)
+    }
   }
 
   fun requestPatternDetails(id: Long, onSuccess: (PatternDetails, Boolean) -> Unit) {
