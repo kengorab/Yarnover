@@ -10,6 +10,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
+import android.widget.Toast.LENGTH_SHORT
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.PatternDetails
@@ -61,6 +62,8 @@ class PatternDetailsActivity : AppCompatActivity() {
       activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    patternImage.loadImg(basicPatternInfo.photoUrl, onSuccess = { it.startPostponedTransition(this) })
+
     patternName.text = basicPatternInfo.patternName
     authorName.text = basicPatternInfo.designerName
 
@@ -79,8 +82,6 @@ class PatternDetailsActivity : AppCompatActivity() {
       patternDetailsTableExpanded = !patternDetailsTableExpanded
     }
 
-    patternImage.loadImg(basicPatternInfo.photoUrl, onSuccess = { it.startPostponedTransition(this) })
-
     if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PARCEL)) {
       val parcel = savedInstanceState.get(KEY_PARCEL) as PatternDetailsParcel
       initWithParcel(parcel)
@@ -95,6 +96,27 @@ class PatternDetailsActivity : AppCompatActivity() {
     this.patternDetails = parcel
     downloadPdf.visibility = if (parcel.urlIsPdf) View.VISIBLE else View.GONE
     setupPatternDetailsTable()
+
+    fabAddToLibrary.labelVisibility = View.VISIBLE
+    fabAddToLibrary.labelText = if (parcel.isInLibrary) "Remove from Library" else "Add to Library"
+    fabAddToLibrary.setOnClickListener {
+      fab.close(true)
+      Toast.makeText(this, "Added to Library!", LENGTH_SHORT).show()
+    }
+
+    fabAddToQueue.labelVisibility = View.VISIBLE
+    fabAddToQueue.labelText = if (parcel.isInLibrary) "Remove from Queue" else "Add to Queue"
+    fabAddToQueue.setOnClickListener {
+      fab.close(true)
+      Toast.makeText(this, "Added to Queue!", LENGTH_SHORT).show()
+    }
+
+    fabAddToFavorites.labelVisibility = View.VISIBLE
+    fabAddToFavorites.labelText = if (parcel.isFavorite) "Remove from Favorites" else "Add to Favorites"
+    fabAddToFavorites.setOnClickListener {
+      fab.close(true)
+      Toast.makeText(this, "Added to Favorites!", LENGTH_SHORT).show()
+    }
 
     detailsLoading.visibility = View.GONE
     detailsContainer.visibility = View.VISIBLE

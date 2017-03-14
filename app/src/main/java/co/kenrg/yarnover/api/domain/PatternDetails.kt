@@ -28,7 +28,7 @@ data class PatternDetails(
     @Json(name = "pdf_in_library") val isPdfInLibrary: Boolean,
     @Json(name = "pdf_url") val pdfUrl: String,
     @Json(name = "permalink") val permalink: String,
-    @Json(name = "personal_attributes") val personalAttributes: Map<String, Any>,
+    @Json(name = "personal_attributes") val personalAttributes: PersonalAttributes,
     @Json(name = "photos") val photos: List<Photo>,
     @Json(name = "price") val price: String,
     @Json(name = "printings") val printings: List<Printing>,

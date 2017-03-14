@@ -4,6 +4,14 @@ import android.os.Parcel
 import co.kenrg.yarnover.api.domain.PatternDetails
 import co.kenrg.yarnover.iface.parcelable.DefaultParcelable
 
+fun Parcel.writeBoolean(b: Boolean) {
+  writeInt(if (b) 0 else 1)
+}
+
+fun Parcel.readBoolean(): Boolean {
+  return readInt() == 0
+}
+
 class PatternDetailsParcel(
     val patternName: String,
     val patternAuthor: String,
@@ -16,13 +24,16 @@ class PatternDetailsParcel(
     val yarnWeightDesc: String,
     val gaugeDesc: String,
     val yardageDesc: String,
-    val needleSizes: List<String>
+    val needleSizes: List<String>,
+    val isInLibrary: Boolean,
+    val isQueued: Boolean,
+    val isFavorite: Boolean
 ) : DefaultParcelable {
   override fun writeToParcel(dest: Parcel, flags: Int) {
     dest.writeString(patternName)
     dest.writeString(patternAuthor)
     dest.writeString(downloadUrl)
-    dest.writeInt(if (urlIsPdf) 0 else 1)
+    dest.writeBoolean(urlIsPdf)
     dest.writeString(craft)
     dest.writeStringList(categories)
     dest.writeString(publishedDate)
@@ -31,6 +42,9 @@ class PatternDetailsParcel(
     dest.writeString(gaugeDesc)
     dest.writeString(yardageDesc)
     dest.writeStringList(needleSizes)
+    dest.writeBoolean(isInLibrary)
+    dest.writeBoolean(isQueued)
+    dest.writeBoolean(isFavorite)
   }
 
   constructor(patternDetails: PatternDetails, urlIsPdf: Boolean) : this(
@@ -45,7 +59,10 @@ class PatternDetailsParcel(
       patternDetails.yarnWeightDesc,
       patternDetails.gaugeDesc,
       patternDetails.yardageDesc,
-      patternDetails.patternNeedleSizes.map { it.name }
+      patternDetails.patternNeedleSizes.map { it.name },
+      patternDetails.personalAttributes.isInLibrary,
+      patternDetails.personalAttributes.isQueued,
+      patternDetails.personalAttributes.isFavorite
   )
 
   companion object {
@@ -62,7 +79,10 @@ class PatternDetailsParcel(
           it.readString(),
           it.readString(),
           it.readString(),
-          it.createStringArrayList()
+          it.createStringArrayList(),
+          it.readBoolean(),
+          it.readBoolean(),
+          it.readBoolean()
       )
     }
   }
