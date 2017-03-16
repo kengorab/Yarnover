@@ -8,7 +8,7 @@ data class PatternSource(
     @Json(name = "name") val name: String,
     @Json(name = "list_price") val listPrice: Float?,
     @Json(name = "patterns_count") val numPatterns: Int,
-    @Json(name = "out_of_print") val isOutOfPrint: Boolean,
+    @Json(name = "out_of_print") val isOutOfPrint: Boolean?,
     @Json(name = "price") val price: Float?,
     @Json(name = "permalink") val permalink: String,
     @Json(name = "url") val url: String,

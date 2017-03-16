@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -14,6 +15,7 @@ import android.widget.Toast.LENGTH_SHORT
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.PatternDetails
+import co.kenrg.yarnover.api.query.Volume
 import co.kenrg.yarnover.ext.addRow
 import co.kenrg.yarnover.ext.checkPermission
 import co.kenrg.yarnover.ext.downloadFile
@@ -96,30 +98,45 @@ class PatternDetailsActivity : AppCompatActivity() {
     this.patternDetails = parcel
     downloadPdf.visibility = if (parcel.urlIsPdf) View.VISIBLE else View.GONE
     setupPatternDetailsTable()
-
-    fabAddToLibrary.labelVisibility = View.VISIBLE
-    fabAddToLibrary.labelText = if (parcel.isInLibrary) "Remove from Library" else "Add to Library"
-    fabAddToLibrary.setOnClickListener {
-      fab.close(true)
-      Toast.makeText(this, "Added to Library!", LENGTH_SHORT).show()
-    }
-
-    fabAddToQueue.labelVisibility = View.VISIBLE
-    fabAddToQueue.labelText = if (parcel.isInLibrary) "Remove from Queue" else "Add to Queue"
-    fabAddToQueue.setOnClickListener {
-      fab.close(true)
-      Toast.makeText(this, "Added to Queue!", LENGTH_SHORT).show()
-    }
-
-    fabAddToFavorites.labelVisibility = View.VISIBLE
-    fabAddToFavorites.labelText = if (parcel.isFavorite) "Remove from Favorites" else "Add to Favorites"
-    fabAddToFavorites.setOnClickListener {
-      fab.close(true)
-      Toast.makeText(this, "Added to Favorites!", LENGTH_SHORT).show()
-    }
+    setupFabMenu(parcel)
 
     detailsLoading.visibility = View.GONE
     detailsContainer.visibility = View.VISIBLE
+  }
+
+  fun setupFabMenu(patternDetails: PatternDetailsParcel) {
+    fun libraryHandler(isInLibrary: Boolean) {
+      this.patternDetails = patternDetails.copy(isInLibrary = isInLibrary)
+      Toast.makeText(this, if (isInLibrary) "Added to Library!" else "Removed from Library!", LENGTH_SHORT).show()
+      setupFabMenu(this.patternDetails!!)
+    }
+
+    fabAddToLibrary.apply {
+      labelVisibility = View.VISIBLE
+      labelText = if (patternDetails.isInLibrary) "Remove from Library" else "Add to Library"
+      setOnClickListener {
+        fab.close(true)
+
+        if (patternDetails.isInLibrary)
+          removeFromLibrary(patternDetails.patternName) { _ -> libraryHandler(isInLibrary = false) }
+        else
+          addToLibrary(patternDetails.patternId) { _ -> libraryHandler(isInLibrary = true) }
+      }
+    }
+
+//    fabAddToQueue.labelVisibility = View.VISIBLE
+//    fabAddToQueue.labelText = if (parcel.isInLibrary) "Remove from Queue" else "Add to Queue"
+//    fabAddToQueue.setOnClickListener {
+//      fab.close(true)
+//      Toast.makeText(this, "Added to Queue!", LENGTH_SHORT).show()
+//    }
+//
+//    fabAddToFavorites.labelVisibility = View.VISIBLE
+//    fabAddToFavorites.labelText = if (parcel.isFavorite) "Remove from Favorites" else "Add to Favorites"
+//    fabAddToFavorites.setOnClickListener {
+//      fab.close(true)
+//      Toast.makeText(this, "Added to Favorites!", LENGTH_SHORT).show()
+//    }
   }
 
   fun setupPatternDetailsTable() {
@@ -184,6 +201,47 @@ class PatternDetailsActivity : AppCompatActivity() {
           // TODO - Replace this with snackbar, prompting user to retry request
           Toast.makeText(this@PatternDetailsActivity, "Error fetching pattern details...", LENGTH_LONG).show()
         } else onSuccess(body!!, urlIsPdf)
+      }
+    }
+  }
+
+  fun addToLibrary(id: Long, onSuccess: (Map<String, Any>) -> Unit) {
+    doAsync {
+      val response = ravelryApi.addToLibrary(Volume(patternId = id)).execute()
+
+      uiThread {
+        if (!response.isSuccessful) {
+          // TODO - Replace this with snackbar, prompting user to retry request
+          Log.e("ASDF", response.message())
+          Toast.makeText(this@PatternDetailsActivity, "Error adding pattern to library...", LENGTH_LONG).show()
+        } else onSuccess(response.body())
+      }
+    }
+  }
+
+  fun removeFromLibrary(patternName: String, onSuccess: (Map<String, Any>) -> Unit) {
+    doAsync {
+      val librarySearchResponse = ravelryApi.searchLibrary("roboguy12", patternName).execute()
+
+      if (!librarySearchResponse.isSuccessful) {
+        uiThread {
+          // TODO - Replace this with snackbar, prompting user to retry request
+          Log.e("ASDF", librarySearchResponse.message())
+          Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from library...", LENGTH_LONG).show()
+        }
+      } else if (librarySearchResponse.body().paginator.pageCount == 0) {
+        Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from library...", LENGTH_LONG).show()
+      } else {
+        val volumeIdForPattern = librarySearchResponse.body().volumes[0].id
+        val response = ravelryApi.removeFromLibrary(volumeIdForPattern).execute()
+
+        uiThread {
+          if (!response.isSuccessful) {
+            // TODO - Replace this with snackbar, prompting user to retry request
+            Log.e("ASDF", response.message())
+            Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from library...", LENGTH_LONG).show()
+          } else onSuccess(response.body())
+        }
       }
     }
   }

@@ -12,7 +12,8 @@ fun Parcel.readBoolean(): Boolean {
   return readInt() == 0
 }
 
-class PatternDetailsParcel(
+data class PatternDetailsParcel(
+    val patternId: Long,
     val patternName: String,
     val patternAuthor: String,
     val downloadUrl: String,
@@ -30,6 +31,7 @@ class PatternDetailsParcel(
     val isFavorite: Boolean
 ) : DefaultParcelable {
   override fun writeToParcel(dest: Parcel, flags: Int) {
+    dest.writeLong(patternId)
     dest.writeString(patternName)
     dest.writeString(patternAuthor)
     dest.writeString(downloadUrl)
@@ -48,6 +50,7 @@ class PatternDetailsParcel(
   }
 
   constructor(patternDetails: PatternDetails, urlIsPdf: Boolean) : this(
+      patternDetails.id.toLong(),
       patternDetails.name,
       patternDetails.patternAuthor.name,
       patternDetails.downloadLocation.url,
@@ -68,6 +71,7 @@ class PatternDetailsParcel(
   companion object {
     @JvmField val CREATOR = DefaultParcelable.generateCreator {
       PatternDetailsParcel(
+          it.readLong(),
           it.readString(),
           it.readString(),
           it.readString(),
