@@ -236,18 +236,18 @@
         fab:menu_colorNormal="@color/colorPrimary"
         fab:menu_colorPressed="@color/colorPrimaryDark">
 
-        <!--<com.github.clans.fab.FloatingActionButton-->
-            <!--android:id="@+id/fabAddToQueue"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_queue_add"-->
-            <!--android:tint="@android:color/white"-->
-            <!--app:srcCompat="@drawable/ic_queue_add"-->
-            <!--fab:fab_colorNormal="@color/colorAccent"-->
-            <!--fab:fab_colorPressed="@color/colorAccentLight"-->
-            <!--fab:fab_label="Add to Queue"-->
-            <!--fab:fab_size="mini"-->
-            <!--tools:ignore="VectorDrawableCompat"/>-->
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fabAddToQueue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_queue_add"
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/ic_queue_add"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorAccentLight"
+            fab:fab_label="Add to Queue"
+            fab:fab_size="mini"
+            tools:ignore="VectorDrawableCompat"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fabAddToLibrary"

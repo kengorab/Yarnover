@@ -1,4 +1,4 @@
-package co.kenrg.yarnover.api.query
+package co.kenrg.yarnover.api.request
 
 import com.squareup.moshi.Json
 

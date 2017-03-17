@@ -4,12 +4,14 @@ import co.kenrg.yarnover.api.query.Availability
 import co.kenrg.yarnover.api.query.LibraryQueryType
 import co.kenrg.yarnover.api.query.LibrarySourceType
 import co.kenrg.yarnover.api.query.SortOrder
-import co.kenrg.yarnover.api.query.Volume
 import co.kenrg.yarnover.api.query.YesOrNo
 import co.kenrg.yarnover.api.query.YesOrNo.YES
+import co.kenrg.yarnover.api.request.QueuedProject
+import co.kenrg.yarnover.api.request.Volume
 import co.kenrg.yarnover.api.response.CurrentUserResponse
 import co.kenrg.yarnover.api.response.PaginatedLibrarySearchResponse
 import co.kenrg.yarnover.api.response.PaginatedPatternsResponse
+import co.kenrg.yarnover.api.response.PaginatedQueueResponse
 import co.kenrg.yarnover.api.response.PatternDetailsResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -58,4 +60,26 @@ interface RavelryApi {
   fun removeFromLibrary(
       @Path("id") patternId: Long
   ): Call<Map<String, Any>>
+
+  @POST("/people/{username}/queue/create.json")
+  fun addToQueue(
+      @Path("username") username: String,
+      @Body queuedProject: QueuedProject
+  ): Call<Map<String, Any>>
+
+  @DELETE("/people/{username}/queue/{queuedProjectId}.json")
+  fun removeFromQueue(
+      @Path("username") username: String,
+      @Path("queuedProjectId") queuedProjectId: Long
+  ): Call<Map<String, Any>>
+
+  @GET("/people/{username}/queue/list.json")
+  fun getQueue(
+      @Path("username") username: String,
+      @Query("pattern_id") patternId: Long,
+      @Query("query") query: String? = null,
+      @Query("query_type") queryType: LibraryQueryType = LibraryQueryType.PATTERNS,
+      @Query("page") page: Int = 1,
+      @Query("page_size") pageSize: Int = 25
+  ): Call<PaginatedQueueResponse>
 }

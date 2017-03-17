@@ -15,7 +15,8 @@ import android.widget.Toast.LENGTH_SHORT
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.PatternDetails
-import co.kenrg.yarnover.api.query.Volume
+import co.kenrg.yarnover.api.request.QueuedProject
+import co.kenrg.yarnover.api.request.Volume
 import co.kenrg.yarnover.ext.addRow
 import co.kenrg.yarnover.ext.checkPermission
 import co.kenrg.yarnover.ext.downloadFile
@@ -112,25 +113,43 @@ class PatternDetailsActivity : AppCompatActivity() {
     }
 
     fabAddToLibrary.apply {
+      val isInLibrary = patternDetails.isInLibrary
+
       labelVisibility = View.VISIBLE
-      labelText = if (patternDetails.isInLibrary) "Remove from Library" else "Add to Library"
+      labelText = if (isInLibrary) "Remove from Library" else "Add to Library"
+      setImageResource(if (isInLibrary) R.drawable.ic_remove_circle else R.drawable.ic_library_add)
       setOnClickListener {
         fab.close(true)
 
-        if (patternDetails.isInLibrary)
+        if (isInLibrary)
           removeFromLibrary(patternDetails.patternName) { _ -> libraryHandler(isInLibrary = false) }
         else
           addToLibrary(patternDetails.patternId) { _ -> libraryHandler(isInLibrary = true) }
       }
     }
 
-//    fabAddToQueue.labelVisibility = View.VISIBLE
-//    fabAddToQueue.labelText = if (parcel.isInLibrary) "Remove from Queue" else "Add to Queue"
-//    fabAddToQueue.setOnClickListener {
-//      fab.close(true)
-//      Toast.makeText(this, "Added to Queue!", LENGTH_SHORT).show()
-//    }
-//
+    fun queueHandler(isInQueue: Boolean) {
+      this.patternDetails = patternDetails.copy(isQueued = isInQueue)
+      Toast.makeText(this, if (isInQueue) "Added to Queue!" else "Removed from Queue!", LENGTH_SHORT).show()
+      setupFabMenu(this.patternDetails!!)
+    }
+
+    fabAddToQueue.apply {
+      val isQueued = patternDetails.isQueued
+
+      labelVisibility = View.VISIBLE
+      labelText = if (isQueued) "Remove from Queue" else "Add to Queue"
+      setImageResource(if (isQueued) R.drawable.ic_remove_circle else R.drawable.ic_queue_add)
+      setOnClickListener {
+        fab.close(true)
+
+        if (isQueued)
+          removeFromQueue(patternDetails.patternId) { _ -> queueHandler(isInQueue = false) }
+        else
+          addToQueue(patternDetails.patternId) { _ -> queueHandler(isInQueue = true) }
+      }
+    }
+
 //    fabAddToFavorites.labelVisibility = View.VISIBLE
 //    fabAddToFavorites.labelText = if (parcel.isFavorite) "Remove from Favorites" else "Add to Favorites"
 //    fabAddToFavorites.setOnClickListener {
@@ -221,6 +240,7 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun removeFromLibrary(patternName: String, onSuccess: (Map<String, Any>) -> Unit) {
     doAsync {
+      // TODO - Use real username
       val librarySearchResponse = ravelryApi.searchLibrary("roboguy12", patternName).execute()
 
       if (!librarySearchResponse.isSuccessful) {
@@ -240,6 +260,48 @@ class PatternDetailsActivity : AppCompatActivity() {
             // TODO - Replace this with snackbar, prompting user to retry request
             Log.e("ASDF", response.message())
             Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from library...", LENGTH_LONG).show()
+          } else onSuccess(response.body())
+        }
+      }
+    }
+  }
+
+  fun addToQueue(patternId: Long, onSuccess: (Map<String, Any>) -> Unit) {
+    doAsync {
+      val response = ravelryApi.addToQueue("roboguy12", QueuedProject(patternId)).execute()
+
+      uiThread {
+        if (!response.isSuccessful) {
+          // TODO - Replace this with snackbar, prompting user to retry request
+          Log.e("ASDF", response.message())
+          Toast.makeText(this@PatternDetailsActivity, "Error adding pattern to library...", LENGTH_LONG).show()
+        } else onSuccess(response.body())
+      }
+    }
+  }
+
+  fun removeFromQueue(patternId: Long, onSuccess: (Map<String, Any>) -> Unit) {
+    doAsync {
+      // TODO - Use real username
+      val queueSearchResponse = ravelryApi.getQueue("roboguy12", patternId).execute()
+
+      if (!queueSearchResponse.isSuccessful) {
+        uiThread {
+          // TODO - Replace this with snackbar, prompting user to retry request
+          Log.e("ASDF", queueSearchResponse.message())
+          Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
+        }
+      } else if (queueSearchResponse.body().paginator.pageCount == 0) {
+        Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
+      } else {
+        val queuedProjectId = queueSearchResponse.body().queuedProjects[0].id
+        val response = ravelryApi.removeFromQueue("roboguy12", queuedProjectId).execute()
+
+        uiThread {
+          if (!response.isSuccessful) {
+            // TODO - Replace this with snackbar, prompting user to retry request
+            Log.e("ASDF", response.message())
+            Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
           } else onSuccess(response.body())
         }
       }
