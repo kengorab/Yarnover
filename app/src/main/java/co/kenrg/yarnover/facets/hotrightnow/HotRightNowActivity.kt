@@ -134,7 +134,7 @@ class HotRightNowActivity : AppCompatActivity() {
   }
 
   fun handleLogout(): Boolean {
-    OAuthManager.clearAccessToken(this)
+    OAuthManager.clearAccessToken()
     startActivity(Intent(this, SplashActivity::class.java))
     finish()
     return true

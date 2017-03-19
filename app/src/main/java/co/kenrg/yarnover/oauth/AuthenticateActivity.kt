@@ -26,7 +26,7 @@ class AuthenticateActivity : AppCompatActivity() {
 
       if (verifierCode != null) {
         doAsync {
-          val success = OAuthManager.getAndSetAccessToken(context, verifierCode)
+          val success = OAuthManager.getAndSetAccessToken(verifierCode)
           if (success) {
             val mainActivity = Intent(context, HotRightNowActivity::class.java)
             startActivity(mainActivity)

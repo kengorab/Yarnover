@@ -16,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    if (OAuthManager.setAccessTokenFromSharedPrefs(this)) {
+    if (OAuthManager.setAccessTokenFromSharedPrefs()) {
       startActivity(Intent(this, HotRightNowActivity::class.java))
       finish()
     } else {

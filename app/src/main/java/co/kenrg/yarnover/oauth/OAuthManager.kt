@@ -1,10 +1,9 @@
 package co.kenrg.yarnover.oauth
 
-import android.app.Activity
-import android.content.Context
 import android.util.Log
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.Yarnover
+import co.kenrg.yarnover.settings.SharedSettingsManager
 import oauth.signpost.exception.OAuthCommunicationException
 import oauth.signpost.exception.OAuthExpectationFailedException
 import oauth.signpost.exception.OAuthMessageSignerException
@@ -28,10 +27,6 @@ object OAuthManager {
   private val accessTokenUrl = "$baseUrl/oauth/access_token"
   private val authorizeUrl = "$baseUrl/oauth/authorize"
 
-  private val prefFileName = "YarnoverPrefs"
-  private val consumerToken = "consumerToken"
-  private val consumerSecret = "consumerSecret"
-
   private val consumer = OkHttpOAuthConsumer(ravelryAuthKey, ravelrySecretKey)
   private val provider = OkHttpOAuthProvider(requestTokenUrl, accessTokenUrl, authorizeUrl)
 
@@ -43,34 +38,24 @@ object OAuthManager {
     return provider.retrieveRequestToken(consumer, AUTH_CALLBACK_URL)
   }
 
-  fun setAccessTokenFromSharedPrefs(activity: Activity): Boolean {
-    val settings = activity.getSharedPreferences(prefFileName, 0)
-    val token = settings.getString(consumerToken, "")
-    val secret = settings.getString(consumerSecret, "")
-
-    val exists = token.isNotEmpty() && secret.isNotEmpty()
+  fun setAccessTokenFromSharedPrefs(): Boolean {
+    val (exists, token, secret) = SharedSettingsManager.getApiTokenAndSecret()
     if (exists) consumer.setTokenWithSecret(token, secret)
     return exists
   }
 
-  fun clearAccessToken(activity: Activity): Boolean {
-    val editor = activity.getSharedPreferences(prefFileName, 0).edit()
-    editor.putString(consumerToken, "")
-    editor.putString(consumerSecret, "")
+  fun clearAccessToken(): Boolean {
     consumer.setTokenWithSecret("", "")
-    return editor.commit()
+    return SharedSettingsManager.clearApiTokenAndSecret()
   }
 
-  fun getAndSetAccessToken(context: Context, verifyCode: String): Boolean {
+  fun getAndSetAccessToken(verifyCode: String): Boolean {
     try {
       provider.retrieveAccessToken(consumer, verifyCode)
       val token = consumer.token
       val secret = consumer.tokenSecret
       if (token != null && secret != null) {
-        val editor = context.getSharedPreferences(prefFileName, Activity.MODE_PRIVATE).edit()
-        editor.putString(consumerToken, token)
-        editor.putString(consumerSecret, secret)
-        return editor.commit()
+        return SharedSettingsManager.setApiTokenAndSecret(token, secret)
       } else {
         return false
       }
