@@ -18,6 +18,7 @@ class SplashActivity : AppCompatActivity() {
 
     if (OAuthManager.setAccessTokenFromSharedPrefs(this)) {
       startActivity(Intent(this, HotRightNowActivity::class.java))
+      finish()
     } else {
       setContentView(R.layout.activity_splash)
       loginToRavelry.setOnClickListener {
