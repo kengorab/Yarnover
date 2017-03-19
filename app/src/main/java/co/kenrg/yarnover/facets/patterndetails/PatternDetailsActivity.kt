@@ -15,6 +15,7 @@ import android.widget.Toast.LENGTH_SHORT
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.PatternDetails
+import co.kenrg.yarnover.api.request.Bookmark
 import co.kenrg.yarnover.api.request.QueuedProject
 import co.kenrg.yarnover.api.request.Volume
 import co.kenrg.yarnover.ext.addRow
@@ -150,12 +151,32 @@ class PatternDetailsActivity : AppCompatActivity() {
       }
     }
 
-//    fabAddToFavorites.labelVisibility = View.VISIBLE
-//    fabAddToFavorites.labelText = if (parcel.isFavorite) "Remove from Favorites" else "Add to Favorites"
-//    fabAddToFavorites.setOnClickListener {
-//      fab.close(true)
-//      Toast.makeText(this, "Added to Favorites!", LENGTH_SHORT).show()
-//    }
+    fun favoritesHandler(isInFavorites: Boolean, bookmarkId: Long?) {
+      this.patternDetails = patternDetails.copy(isFavorite = isInFavorites, bookmarkId = bookmarkId)
+      Toast.makeText(this, if (isInFavorites) "Added to Favorites!" else "Removed from Favorites!", LENGTH_SHORT).show()
+      setupFabMenu(this.patternDetails!!)
+    }
+
+    fabAddToFavorites.apply {
+      val isFavorite = patternDetails.isFavorite && patternDetails.bookmarkId != null
+      labelVisibility = View.VISIBLE
+      labelText = if (isFavorite) "Remove from Favorites" else "Add to Favorites"
+      setImageResource(if (isFavorite) R.drawable.ic_remove_circle else R.drawable.ic_favorite_border)
+      setOnClickListener {
+        fab.close(true)
+
+        if (isFavorite) {
+          if (patternDetails.bookmarkId != null)
+            removeFromFavorites(patternDetails.bookmarkId) { _ ->
+              favoritesHandler(isInFavorites = false, bookmarkId = null)
+            }
+        } else {
+          addToFavorites(patternDetails.patternId) { bookmarkId ->
+            favoritesHandler(isInFavorites = true, bookmarkId = bookmarkId)
+          }
+        }
+      }
+    }
   }
 
   fun setupPatternDetailsTable() {
@@ -304,6 +325,36 @@ class PatternDetailsActivity : AppCompatActivity() {
             Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
           } else onSuccess(response.body())
         }
+      }
+    }
+  }
+
+  fun addToFavorites(patternId: Long, onSuccess: (Long) -> Unit) {
+    doAsync {
+      // TODO - Use real username
+      val response = ravelryApi.addToFavorites("roboguy12", Bookmark(patternId)).execute()
+
+      uiThread {
+        if (!response.isSuccessful) {
+          // TODO - Replace this with snackbar, prompting user to retry request
+          Log.e("ASDF", response.message())
+          Toast.makeText(this@PatternDetailsActivity, "Error adding pattern to favorites...", LENGTH_LONG).show()
+        } else onSuccess(response.body().bookmark.id)
+      }
+    }
+  }
+
+  fun removeFromFavorites(bookmarkId: Long, onSuccess: (Map<String, Any>) -> Unit) {
+    doAsync {
+      // TODO - Use real username
+      val response = ravelryApi.removeFromFavorites("roboguy12", bookmarkId).execute()
+
+      uiThread {
+        if (!response.isSuccessful) {
+          // TODO - Replace this with snackbar, prompting user to retry request
+          Log.e("ASDF", response.message())
+          Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from favorites...", LENGTH_LONG).show()
+        } else onSuccess(response.body())
       }
     }
   }

@@ -28,7 +28,8 @@ data class PatternDetailsParcel(
     val needleSizes: List<String>,
     val isInLibrary: Boolean,
     val isQueued: Boolean,
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+    val bookmarkId: Long?
 ) : DefaultParcelable {
   override fun writeToParcel(dest: Parcel, flags: Int) {
     dest.writeLong(patternId)
@@ -47,6 +48,7 @@ data class PatternDetailsParcel(
     dest.writeBoolean(isInLibrary)
     dest.writeBoolean(isQueued)
     dest.writeBoolean(isFavorite)
+    dest.writeLong(bookmarkId ?: -1)
   }
 
   constructor(patternDetails: PatternDetails, urlIsPdf: Boolean) : this(
@@ -65,7 +67,8 @@ data class PatternDetailsParcel(
       patternDetails.patternNeedleSizes.map { it.name },
       patternDetails.personalAttributes.isInLibrary,
       patternDetails.personalAttributes.isQueued,
-      patternDetails.personalAttributes.isFavorite
+      patternDetails.personalAttributes.isFavorite,
+      patternDetails.personalAttributes.bookmarkId
   )
 
   companion object {
@@ -86,7 +89,11 @@ data class PatternDetailsParcel(
           it.createStringArrayList(),
           it.readBoolean(),
           it.readBoolean(),
-          it.readBoolean()
+          it.readBoolean(),
+          it.readLong().let { bookmarkId ->
+            if (bookmarkId == -1L) null
+            else bookmarkId
+          }
       )
     }
   }

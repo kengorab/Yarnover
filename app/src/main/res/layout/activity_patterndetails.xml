@@ -262,18 +262,18 @@
             fab:fab_size="mini"
             tools:ignore="VectorDrawableCompat"/>
 
-        <!--<com.github.clans.fab.FloatingActionButton-->
-            <!--android:id="@+id/fabAddToFavorites"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_favorite_border"-->
-            <!--android:tint="@android:color/white"-->
-            <!--app:srcCompat="@drawable/ic_favorite_border"-->
-            <!--fab:fab_colorNormal="@color/colorAccent"-->
-            <!--fab:fab_colorPressed="@color/colorAccentLight"-->
-            <!--fab:fab_label="Add to Favorites"-->
-            <!--fab:fab_size="mini"-->
-            <!--tools:ignore="VectorDrawableCompat"/>-->
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fabAddToFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_border"
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/ic_favorite_border"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorAccentLight"
+            fab:fab_label="Add to Favorites"
+            fab:fab_size="mini"
+            tools:ignore="VectorDrawableCompat"/>
 
     </com.github.clans.fab.FloatingActionMenu>
 

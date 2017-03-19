@@ -6,8 +6,10 @@ import co.kenrg.yarnover.api.query.LibrarySourceType
 import co.kenrg.yarnover.api.query.SortOrder
 import co.kenrg.yarnover.api.query.YesOrNo
 import co.kenrg.yarnover.api.query.YesOrNo.YES
+import co.kenrg.yarnover.api.request.Bookmark
 import co.kenrg.yarnover.api.request.QueuedProject
 import co.kenrg.yarnover.api.request.Volume
+import co.kenrg.yarnover.api.response.BookmarkResponse
 import co.kenrg.yarnover.api.response.CurrentUserResponse
 import co.kenrg.yarnover.api.response.PaginatedLibrarySearchResponse
 import co.kenrg.yarnover.api.response.PaginatedPatternsResponse
@@ -82,4 +84,16 @@ interface RavelryApi {
       @Query("page") page: Int = 1,
       @Query("page_size") pageSize: Int = 25
   ): Call<PaginatedQueueResponse>
+
+  @POST("/people/{username}/favorites/create.json")
+  fun addToFavorites(
+      @Path("username") username: String,
+      @Body bookmark: Bookmark
+  ): Call<BookmarkResponse>
+
+  @DELETE("/people/{username}/favorites/{id}.json")
+  fun removeFromFavorites(
+      @Path("username") username: String,
+      @Path("id") favoritedId: Long
+  ): Call<Map<String, Any>>
 }
