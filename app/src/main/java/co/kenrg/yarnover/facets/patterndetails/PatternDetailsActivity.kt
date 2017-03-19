@@ -30,6 +30,7 @@ import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_DOWNLOAD_URL
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_NAME
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.MY_PERMISSIONS_REQUEST_WRITE_EXT_STORAGE
+import co.kenrg.yarnover.oauth.UserManager
 import co.kenrg.yarnover.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_patterndetails.*
 import org.jetbrains.anko.doAsync
@@ -261,8 +262,8 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun removeFromLibrary(patternName: String, onSuccess: (Map<String, Any>) -> Unit) {
     doAsync {
-      // TODO - Use real username
-      val librarySearchResponse = ravelryApi.searchLibrary("roboguy12", patternName).execute()
+      val username = UserManager.getUsername()
+      val librarySearchResponse = ravelryApi.searchLibrary(username, patternName).execute()
 
       if (!librarySearchResponse.isSuccessful) {
         uiThread {
@@ -289,7 +290,8 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun addToQueue(patternId: Long, onSuccess: (Map<String, Any>) -> Unit) {
     doAsync {
-      val response = ravelryApi.addToQueue("roboguy12", QueuedProject(patternId)).execute()
+      val username = UserManager.getUsername()
+      val response = ravelryApi.addToQueue(username, QueuedProject(patternId)).execute()
 
       uiThread {
         if (!response.isSuccessful) {
@@ -303,8 +305,8 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun removeFromQueue(patternId: Long, onSuccess: (Map<String, Any>) -> Unit) {
     doAsync {
-      // TODO - Use real username
-      val queueSearchResponse = ravelryApi.getQueue("roboguy12", patternId).execute()
+      val username = UserManager.getUsername()
+      val queueSearchResponse = ravelryApi.getQueue(username, patternId).execute()
 
       if (!queueSearchResponse.isSuccessful) {
         uiThread {
@@ -316,7 +318,7 @@ class PatternDetailsActivity : AppCompatActivity() {
         Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
       } else {
         val queuedProjectId = queueSearchResponse.body().queuedProjects[0].id
-        val response = ravelryApi.removeFromQueue("roboguy12", queuedProjectId).execute()
+        val response = ravelryApi.removeFromQueue(username, queuedProjectId).execute()
 
         uiThread {
           if (!response.isSuccessful) {
@@ -331,8 +333,8 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun addToFavorites(patternId: Long, onSuccess: (Long) -> Unit) {
     doAsync {
-      // TODO - Use real username
-      val response = ravelryApi.addToFavorites("roboguy12", Bookmark(patternId)).execute()
+      val username = UserManager.getUsername()
+      val response = ravelryApi.addToFavorites(username, Bookmark(patternId)).execute()
 
       uiThread {
         if (!response.isSuccessful) {
@@ -346,8 +348,8 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun removeFromFavorites(bookmarkId: Long, onSuccess: (Map<String, Any>) -> Unit) {
     doAsync {
-      // TODO - Use real username
-      val response = ravelryApi.removeFromFavorites("roboguy12", bookmarkId).execute()
+      val username = UserManager.getUsername()
+      val response = ravelryApi.removeFromFavorites(username, bookmarkId).execute()
 
       uiThread {
         if (!response.isSuccessful) {

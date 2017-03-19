@@ -7,14 +7,15 @@ import co.kenrg.yarnover.Yarnover
 object SharedSettingsManager {
   private val prefFileName = "YarnoverPrefs"
 
-  private val KEY_CONSUMER_TOKEN = "consumerToken"
-  private val KEY_CONSUMER_SECRET = "consumerSecret"
-
   private fun withPrefsEditor(applyToEditor: SharedPreferences.Editor.() -> Unit): Boolean {
     val editor = Yarnover.appContext.getSharedPreferences(prefFileName, MODE_PRIVATE).edit()
     editor.apply(applyToEditor)
     return editor.commit()
   }
+
+  // --------------- API Token & Secret --------------- \\
+  private val KEY_CONSUMER_TOKEN = "consumerToken"
+  private val KEY_CONSUMER_SECRET = "consumerSecret"
 
   fun setApiTokenAndSecret(token: String, secret: String) =
       withPrefsEditor {
@@ -32,4 +33,18 @@ object SharedSettingsManager {
     val isEmpty = token.isNotEmpty() && secret.isNotEmpty()
     return Triple(isEmpty, token, secret)
   }
+
+  // --------------- Current User --------------- \\
+  private val KEY_CURRENT_USERNAME = "currentUsername"
+
+  fun getCurrentUsername(): Pair<Boolean, String> {
+    val prefs = Yarnover.appContext.getSharedPreferences(prefFileName, MODE_PRIVATE)
+    val username = prefs.getString(KEY_CURRENT_USERNAME, "")
+    return Pair(username.isNotEmpty(), username)
+  }
+
+  fun setCurrentUsername(username: String) =
+      withPrefsEditor {
+        putString(KEY_CURRENT_USERNAME, username)
+      }
 }

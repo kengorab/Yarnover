@@ -13,12 +13,25 @@ import org.jetbrains.anko.uiThread
 class SplashActivity : AppCompatActivity() {
   private val activity: SplashActivity = this
 
+  companion object {
+    fun startMainActivity(rootActivity: AppCompatActivity) {
+      fun startActivity() {
+        val intent = Intent(rootActivity, HotRightNowActivity::class.java)
+        rootActivity.startActivity(intent)
+        rootActivity.finish()
+      }
+
+      if (!UserManager.isUserInSharedPrefs())
+        UserManager.storeUsernameInSharedPrefs { startActivity() }
+      else startActivity()
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     if (OAuthManager.setAccessTokenFromSharedPrefs()) {
-      startActivity(Intent(this, HotRightNowActivity::class.java))
-      finish()
+      startMainActivity(this)
     } else {
       setContentView(R.layout.activity_splash)
       loginToRavelry.setOnClickListener {

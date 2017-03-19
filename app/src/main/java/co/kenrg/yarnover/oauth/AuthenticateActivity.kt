@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import co.kenrg.yarnover.facets.hotrightnow.HotRightNowActivity
 import co.kenrg.yarnover.oauth.OAuthManager.VERIFIER_CODE_QUERY_PARAM
 import org.jetbrains.anko.doAsync
 
@@ -27,13 +26,10 @@ class AuthenticateActivity : AppCompatActivity() {
       if (verifierCode != null) {
         doAsync {
           val success = OAuthManager.getAndSetAccessToken(verifierCode)
-          if (success) {
-            val mainActivity = Intent(context, HotRightNowActivity::class.java)
-            startActivity(mainActivity)
-            finish()
-          } else {
+          if (success)
+            SplashActivity.startMainActivity(this@AuthenticateActivity)
+          else
             Toast.makeText(context, "Incorrect verification code!", Toast.LENGTH_LONG).show()
-          }
         }
       }
     } else {
