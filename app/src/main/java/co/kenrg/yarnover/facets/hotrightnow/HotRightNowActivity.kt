@@ -21,6 +21,7 @@ import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity.Companion.
 import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
 import co.kenrg.yarnover.oauth.OAuthManager
 import co.kenrg.yarnover.oauth.SplashActivity
+import co.kenrg.yarnover.oauth.UserManager
 import kotlinx.android.synthetic.main.activity_hotrightnow.*
 import kotlinx.android.synthetic.main.component_patterncard.view.*
 import org.jetbrains.anko.doAsync
@@ -135,6 +136,7 @@ class HotRightNowActivity : AppCompatActivity() {
 
   fun handleLogout(): Boolean {
     OAuthManager.clearAccessToken()
+    UserManager.clearUsernameFromSharedPrefs()
     startActivity(Intent(this, SplashActivity::class.java))
     finish()
     return true

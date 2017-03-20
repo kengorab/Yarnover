@@ -27,4 +27,6 @@ object UserManager {
       uiThread { then() }
     }
   }
+
+  fun clearUsernameFromSharedPrefs() = SharedSettingsManager.clearCurrentUsername()
 }

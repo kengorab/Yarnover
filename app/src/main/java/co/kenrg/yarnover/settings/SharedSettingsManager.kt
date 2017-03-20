@@ -47,4 +47,6 @@ object SharedSettingsManager {
       withPrefsEditor {
         putString(KEY_CURRENT_USERNAME, username)
       }
+
+  fun clearCurrentUsername() = setCurrentUsername("")
 }
