@@ -97,6 +97,7 @@ class PatternDetailsActivity : AppCompatActivity() {
 
   fun initWithParcel(parcel: PatternDetailsParcel) {
     this.patternDetails = parcel
+    openPattern.visibility = if (parcel.urlIsPdf) View.VISIBLE else View.GONE
     downloadPdf.visibility = if (parcel.urlIsPdf) View.VISIBLE else View.GONE
     setupPatternDetailsTable()
     setupFabMenu(parcel)
@@ -234,7 +235,7 @@ class PatternDetailsActivity : AppCompatActivity() {
       if (patternDetails.categories.isNotEmpty())
         this.add(Pair("Categories", patternDetails.categories.joinToString(", ")))
 
-      if (patternDetails.publishedDate.isNotBlank()) {
+      if (patternDetails.publishedDate != null && patternDetails.publishedDate.isNotBlank()) {
         val parsedDate = DateUtils.parse(patternDetails.publishedDate)
         if (parsedDate != null && parsedDate.format() != null)
           this.add(Pair("Published", parsedDate.format()!!))

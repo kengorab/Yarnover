@@ -20,7 +20,7 @@ data class PatternDetailsParcel(
     val urlIsPdf: Boolean,
     val craft: String,
     val categories: List<String>,
-    val publishedDate: String,
+    val publishedDate: String?,
     val patternSource: String?,
     val yarnWeightDesc: String,
     val gaugeDesc: String,
