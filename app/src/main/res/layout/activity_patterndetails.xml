@@ -233,6 +233,7 @@
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
+        app:layout_behavior="co.kenrg.yarnover.ui.behavior.MoveUpwardBehavior"
         fab:menu_colorNormal="@color/colorPrimary"
         fab:menu_colorPressed="@color/colorPrimaryDark">
 
@@ -276,17 +277,5 @@
             tools:ignore="VectorDrawableCompat"/>
 
     </com.github.clans.fab.FloatingActionMenu>
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/fabAdd"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_margin="16dp"-->
-    <!--android:clickable="true"-->
-    <!--android:tint="@android:color/white"-->
-    <!--app:fabSize="normal"-->
-    <!--app:layout_anchor="@+id/app_bar_layout"-->
-    <!--app:layout_anchorGravity="bottom|right|end"-->
-    <!--app:srcCompat="@drawable/ic_plus"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

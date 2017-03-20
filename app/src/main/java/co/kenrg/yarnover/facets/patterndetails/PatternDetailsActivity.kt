@@ -4,6 +4,7 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
@@ -11,7 +12,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
-import android.widget.Toast.LENGTH_SHORT
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.PatternDetails
@@ -110,7 +110,20 @@ class PatternDetailsActivity : AppCompatActivity() {
   fun setupFabMenu(patternDetails: PatternDetailsParcel) {
     fun libraryHandler(isInLibrary: Boolean) {
       this.patternDetails = patternDetails.copy(isInLibrary = isInLibrary)
-      Toast.makeText(this, if (isInLibrary) "Added to Library!" else "Removed from Library!", LENGTH_SHORT).show()
+      if (isInLibrary)
+        Snackbar
+            .make(container, "Added to Library!", Snackbar.LENGTH_SHORT)
+            .show()
+      else
+        Snackbar
+            .make(container, "Removed from Library!", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+              addToLibrary(patternDetails.patternId) {
+                libraryHandler(isInLibrary = true)
+              }
+            }
+            .show()
+
       setupFabMenu(this.patternDetails!!)
     }
 
@@ -124,15 +137,28 @@ class PatternDetailsActivity : AppCompatActivity() {
         fab.close(true)
 
         if (isInLibrary)
-          removeFromLibrary(patternDetails.patternName) { _ -> libraryHandler(isInLibrary = false) }
+          removeFromLibrary(patternDetails.patternName) { libraryHandler(isInLibrary = false) }
         else
-          addToLibrary(patternDetails.patternId) { _ -> libraryHandler(isInLibrary = true) }
+          addToLibrary(patternDetails.patternId) { libraryHandler(isInLibrary = true) }
       }
     }
 
     fun queueHandler(isInQueue: Boolean) {
       this.patternDetails = patternDetails.copy(isQueued = isInQueue)
-      Toast.makeText(this, if (isInQueue) "Added to Queue!" else "Removed from Queue!", LENGTH_SHORT).show()
+      if (isInQueue)
+        Snackbar
+            .make(container, "Added to Queue!", Snackbar.LENGTH_SHORT)
+            .show()
+      else
+        Snackbar
+            .make(container, "Removed from Queue!", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+              addToQueue(patternDetails.patternId) {
+                queueHandler(isInQueue = true)
+              }
+            }
+            .show()
+
       setupFabMenu(this.patternDetails!!)
     }
 
@@ -146,15 +172,27 @@ class PatternDetailsActivity : AppCompatActivity() {
         fab.close(true)
 
         if (isQueued)
-          removeFromQueue(patternDetails.patternId) { _ -> queueHandler(isInQueue = false) }
+          removeFromQueue(patternDetails.patternId) { queueHandler(isInQueue = false) }
         else
-          addToQueue(patternDetails.patternId) { _ -> queueHandler(isInQueue = true) }
+          addToQueue(patternDetails.patternId) { queueHandler(isInQueue = true) }
       }
     }
 
     fun favoritesHandler(isInFavorites: Boolean, bookmarkId: Long?) {
       this.patternDetails = patternDetails.copy(isFavorite = isInFavorites, bookmarkId = bookmarkId)
-      Toast.makeText(this, if (isInFavorites) "Added to Favorites!" else "Removed from Favorites!", LENGTH_SHORT).show()
+      if (isInFavorites)
+        Snackbar
+            .make(container, "Added to Favorites!", Snackbar.LENGTH_SHORT)
+            .show()
+      else
+        Snackbar
+            .make(container, "Removed from Favorites!", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+              addToFavorites(patternDetails.patternId) { bookmarkId ->
+                favoritesHandler(isInFavorites = true, bookmarkId = bookmarkId)
+              }
+            }
+            .show()
       setupFabMenu(this.patternDetails!!)
     }
 
@@ -168,7 +206,7 @@ class PatternDetailsActivity : AppCompatActivity() {
 
         if (isFavorite) {
           if (patternDetails.bookmarkId != null)
-            removeFromFavorites(patternDetails.bookmarkId) { _ ->
+            removeFromFavorites(patternDetails.bookmarkId) {
               favoritesHandler(isInFavorites = false, bookmarkId = null)
             }
         } else {
