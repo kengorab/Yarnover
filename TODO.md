@@ -7,6 +7,7 @@ A list of things that should get done in this project, in no particular order of
   ◻️ Dark mode/other themes
   ◻️ Search activity (allowing search/filter on all of the various parameters that Ravelry supports)
   ◻️ Buying paid patterns
+  ◻️ Navigate through user info; library, queue, and favorites all in tabs maybe?
 
 # `HotRightNowActivity`
   ✔ Display list of cards, for free patterns, sorted by Hot Right Now
