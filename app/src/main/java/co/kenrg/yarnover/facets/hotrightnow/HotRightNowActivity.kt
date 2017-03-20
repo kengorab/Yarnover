@@ -4,14 +4,13 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem.SHOW_AS_ACTION_NEVER
 import android.view.View
-import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
@@ -79,21 +78,20 @@ class HotRightNowActivity : AppCompatActivity() {
 
   fun requestPatterns(page: Int) {
     doAsync {
-      val response = ravelryApi.searchPatterns(
-          page = page
-      ).execute()
+      val response = ravelryApi.searchPatterns(page = page).execute()
 
       uiThread {
         if (!response.isSuccessful) {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Toast.makeText(this@HotRightNowActivity, "Error fetching patterns...", LENGTH_LONG).show()
+          Snackbar.make(container, "There was a problem fetching patterns", Snackbar.LENGTH_LONG)
+              .setAction("Retry") { requestPatterns(page) }
+              .setDuration(3000)
+              .show()
         } else {
           currentPage = page
-          val patternViewItems = response.body().patterns
-              .map { (id, name, _, firstPhoto, designer) ->
-                val photoUrl = firstPhoto.mediumUrl ?: firstPhoto.medium2Url ?: firstPhoto.squareUrl
-                ViewItem.Pattern(id, name, designer.name, photoUrl)
-              }
+          val patternViewItems = response.body().patterns.map { (id, name, _, firstPhoto, designer) ->
+            val photoUrl = firstPhoto.mediumUrl ?: firstPhoto.medium2Url ?: firstPhoto.squareUrl
+            ViewItem.Pattern(id, name, designer.name, photoUrl)
+          }
           patternsAdapter.addPatterns(patternViewItems)
         }
       }
