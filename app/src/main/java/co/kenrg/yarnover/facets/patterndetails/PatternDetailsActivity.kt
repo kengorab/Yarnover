@@ -6,11 +6,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
@@ -106,6 +104,8 @@ class PatternDetailsActivity : AppCompatActivity() {
     detailsLoading.visibility = View.GONE
     detailsContainer.visibility = View.VISIBLE
   }
+
+  // --------------- View Setup --------------- \\
 
   fun setupFabMenu(patternDetails: PatternDetailsParcel) {
     fun libraryHandler(isInLibrary: Boolean) {
@@ -258,6 +258,8 @@ class PatternDetailsActivity : AppCompatActivity() {
     }
   }
 
+  // --------------- HTTP Requests --------------- \\
+
   fun requestPatternDetails(id: Long, onSuccess: (PatternDetails, Boolean) -> Unit) {
     doAsync {
       val response = ravelryApi.getPatternById(id).execute()
@@ -276,10 +278,12 @@ class PatternDetailsActivity : AppCompatActivity() {
           }
 
       uiThread {
-        if (!response.isSuccessful) {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Toast.makeText(this@PatternDetailsActivity, "Error fetching pattern details...", LENGTH_LONG).show()
-        } else onSuccess(body!!, urlIsPdf)
+        if (!response.isSuccessful)
+          handleError("There was a problem getting pattern details") {
+            requestPatternDetails(id, onSuccess)
+          }
+        else
+          onSuccess(body!!, urlIsPdf)
       }
     }
   }
@@ -289,38 +293,36 @@ class PatternDetailsActivity : AppCompatActivity() {
       val response = ravelryApi.addToLibrary(Volume(patternId = id)).execute()
 
       uiThread {
-        if (!response.isSuccessful) {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Log.e("ASDF", response.message())
-          Toast.makeText(this@PatternDetailsActivity, "Error adding pattern to library...", LENGTH_LONG).show()
-        } else onSuccess(response.body())
+        if (!response.isSuccessful)
+          handleError("There was a problem adding to library") {
+            addToLibrary(id, onSuccess)
+          }
+        else
+          onSuccess(response.body())
       }
     }
   }
 
   fun removeFromLibrary(patternName: String, onSuccess: (Map<String, Any>) -> Unit) {
+    fun handleError() = handleError("There was a problem removing from library") {
+      removeFromLibrary(patternName, onSuccess)
+    }
+
     doAsync {
       val username = UserManager.getUsername()
       val librarySearchResponse = ravelryApi.searchLibrary(username, patternName).execute()
 
-      if (!librarySearchResponse.isSuccessful) {
-        uiThread {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Log.e("ASDF", librarySearchResponse.message())
-          Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from library...", LENGTH_LONG).show()
-        }
-      } else if (librarySearchResponse.body().paginator.pageCount == 0) {
-        Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from library...", LENGTH_LONG).show()
-      } else {
+      if (!librarySearchResponse.isSuccessful)
+        uiThread { handleError() }
+      else if (librarySearchResponse.body().paginator.pageCount == 0)
+        handleError()
+      else {
         val volumeIdForPattern = librarySearchResponse.body().volumes[0].id
         val response = ravelryApi.removeFromLibrary(volumeIdForPattern).execute()
 
         uiThread {
-          if (!response.isSuccessful) {
-            // TODO - Replace this with snackbar, prompting user to retry request
-            Log.e("ASDF", response.message())
-            Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from library...", LENGTH_LONG).show()
-          } else onSuccess(response.body())
+          if (!response.isSuccessful) handleError()
+          else onSuccess(response.body())
         }
       }
     }
@@ -332,38 +334,36 @@ class PatternDetailsActivity : AppCompatActivity() {
       val response = ravelryApi.addToQueue(username, QueuedProject(patternId)).execute()
 
       uiThread {
-        if (!response.isSuccessful) {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Log.e("ASDF", response.message())
-          Toast.makeText(this@PatternDetailsActivity, "Error adding pattern to library...", LENGTH_LONG).show()
-        } else onSuccess(response.body())
+        if (!response.isSuccessful)
+          handleError("There was a problem adding to queue") {
+            addToQueue(patternId, onSuccess)
+          }
+        else
+          onSuccess(response.body())
       }
     }
   }
 
   fun removeFromQueue(patternId: Long, onSuccess: (Map<String, Any>) -> Unit) {
+    fun handleError() = handleError("There was a problem removing from queue") {
+      removeFromQueue(patternId, onSuccess)
+    }
+
     doAsync {
       val username = UserManager.getUsername()
       val queueSearchResponse = ravelryApi.getQueue(username, patternId).execute()
 
-      if (!queueSearchResponse.isSuccessful) {
-        uiThread {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Log.e("ASDF", queueSearchResponse.message())
-          Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
-        }
-      } else if (queueSearchResponse.body().paginator.pageCount == 0) {
-        Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
-      } else {
+      if (!queueSearchResponse.isSuccessful)
+        uiThread { handleError() }
+      else if (queueSearchResponse.body().paginator.pageCount == 0)
+        handleError()
+      else {
         val queuedProjectId = queueSearchResponse.body().queuedProjects[0].id
         val response = ravelryApi.removeFromQueue(username, queuedProjectId).execute()
 
         uiThread {
-          if (!response.isSuccessful) {
-            // TODO - Replace this with snackbar, prompting user to retry request
-            Log.e("ASDF", response.message())
-            Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from queue...", LENGTH_LONG).show()
-          } else onSuccess(response.body())
+          if (!response.isSuccessful) handleError()
+          else onSuccess(response.body())
         }
       }
     }
@@ -375,11 +375,12 @@ class PatternDetailsActivity : AppCompatActivity() {
       val response = ravelryApi.addToFavorites(username, Bookmark(patternId)).execute()
 
       uiThread {
-        if (!response.isSuccessful) {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Log.e("ASDF", response.message())
-          Toast.makeText(this@PatternDetailsActivity, "Error adding pattern to favorites...", LENGTH_LONG).show()
-        } else onSuccess(response.body().bookmark.id)
+        if (!response.isSuccessful)
+          handleError("There was a problem adding to favorites") {
+            addToFavorites(patternId, onSuccess)
+          }
+        else
+          onSuccess(response.body().bookmark.id)
       }
     }
   }
@@ -390,14 +391,23 @@ class PatternDetailsActivity : AppCompatActivity() {
       val response = ravelryApi.removeFromFavorites(username, bookmarkId).execute()
 
       uiThread {
-        if (!response.isSuccessful) {
-          // TODO - Replace this with snackbar, prompting user to retry request
-          Log.e("ASDF", response.message())
-          Toast.makeText(this@PatternDetailsActivity, "Error removing pattern from favorites...", LENGTH_LONG).show()
-        } else onSuccess(response.body())
+        if (!response.isSuccessful)
+          handleError("There was a problem removing from favorites") {
+            removeFromFavorites(bookmarkId, onSuccess)
+          }
+        else
+          onSuccess(response.body())
       }
     }
   }
+
+  fun handleError(snackbarMessage: String, retryAction: () -> Unit) =
+      Snackbar.make(container, snackbarMessage, LENGTH_LONG)
+          .setAction("Retry") { retryAction() }
+          .setDuration(3000)
+          .show()
+
+  // --------------- Non-fab Button Click Handlers --------------- \\
 
   fun handleOpenPattern() {
     val intent = Intent(this, PatternPDFViewActivity::class.java)
@@ -415,15 +425,19 @@ class PatternDetailsActivity : AppCompatActivity() {
     }
   }
 
+  // --------------- Permissions Request Lifecycle --------------- \\
+
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
     when (requestCode) {
       MY_PERMISSIONS_REQUEST_WRITE_EXT_STORAGE -> {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          this.downloadFile(this.patternDetails!!.downloadUrl, this.patternDetails!!.patternName)
+          downloadFile(this.patternDetails!!.downloadUrl, this.patternDetails!!.patternName)
         }
       }
     }
   }
+
+  // --------------- Menu Item Click Handlers --------------- \\
 
   override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
     android.R.id.home -> {
