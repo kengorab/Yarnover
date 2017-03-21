@@ -1,5 +1,6 @@
 <resources>
 
+    <!-- Overridden in styles-v21 for translucent status-bar -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
