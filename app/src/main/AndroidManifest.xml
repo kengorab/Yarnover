@@ -10,7 +10,6 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".oauth.SplashActivity">
             <intent-filter>
@@ -21,7 +20,9 @@
         </activity>
         <activity android:name=".oauth.OAuthActivity"/>
         <activity android:name=".oauth.AuthenticateActivity"/>
-        <activity android:name=".facets.hotrightnow.HotRightNowActivity"/>
+        <activity
+            android:name=".facets.hotrightnow.HotRightNowActivity"
+            android:theme="@style/AppTheme.TransparentStatusBar"/>
         <activity
             android:name=".facets.patterndetails.PatternDetailsActivity"
             android:label=""

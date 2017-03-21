@@ -15,6 +15,7 @@ import android.view.MenuItem.SHOW_AS_ACTION_NEVER
 import android.view.View
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
+import co.kenrg.yarnover.ext.setTaskDescription
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity
@@ -28,6 +29,7 @@ import kotlinx.android.synthetic.main.component_patterncard.view.*
 import kotlinx.android.synthetic.main.nav_header.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+
 
 class HotRightNowActivity : AppCompatActivity() {
   companion object {
@@ -53,6 +55,7 @@ class HotRightNowActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_hotrightnow)
+    setTaskDescription()
 
     drawerToggle = object : ActionBarDrawerToggle(
         this,
@@ -133,14 +136,10 @@ class HotRightNowActivity : AppCompatActivity() {
 
   private fun getSharedElementTransitionBundle(patternView: View): Bundle? {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      val decorView = window.decorView
-      val statusBackground = decorView.findViewById(android.R.id.statusBarBackground)
-      val statusBarPair = Pair.create<View, String>(statusBackground, statusBackground.transitionName)
-      val navigation = decorView.findViewById(android.R.id.navigationBarBackground)
-      val navigationPair = Pair.create<View, String>(navigation, navigation.transitionName)
-
-      val pair = Pair.create(patternView.previewImage as View, getString(R.string.transition_preview_image))
-      val animation = ActivityOptions.makeSceneTransitionAnimation(this, pair, statusBarPair, navigationPair)
+      val animation = ActivityOptions.makeSceneTransitionAnimation(this, Pair.create(
+          patternView.previewImage as View,
+          getString(R.string.transition_preview_image)
+      ))
       return animation.toBundle()
     } else {
       return null

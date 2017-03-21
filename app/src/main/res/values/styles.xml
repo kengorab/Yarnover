@@ -1,11 +1,14 @@
 <resources>
 
-    <!-- Overridden in styles-v21 for translucent status-bar -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <!-- Overridden in styles-v21 for translucent status-bar -->
+    <style name="AppTheme.TransparentStatusBar" parent="AppTheme">
     </style>
 
     <style name="AppTheme.BlackStatusBar" parent="AppTheme">

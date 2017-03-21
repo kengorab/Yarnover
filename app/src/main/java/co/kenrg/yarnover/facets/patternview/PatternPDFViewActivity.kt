@@ -16,6 +16,7 @@ import android.widget.Toast.LENGTH_SHORT
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.ext.checkPermission
 import co.kenrg.yarnover.ext.downloadFile
+import co.kenrg.yarnover.ext.setTaskDescription
 import kotlinx.android.synthetic.main.activity_patternpdfview.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -39,6 +40,8 @@ class PatternPDFViewActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_patternpdfview)
+    setTaskDescription()
+
     toolbar.apply {
       activity.setSupportActionBar(this)
       activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)

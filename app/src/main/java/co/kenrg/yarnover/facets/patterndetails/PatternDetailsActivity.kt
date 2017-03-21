@@ -21,6 +21,7 @@ import co.kenrg.yarnover.ext.checkPermission
 import co.kenrg.yarnover.ext.downloadFile
 import co.kenrg.yarnover.ext.format
 import co.kenrg.yarnover.ext.loadImg
+import co.kenrg.yarnover.ext.setTaskDescription
 import co.kenrg.yarnover.ext.startPostponedTransition
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity
@@ -55,6 +56,7 @@ class PatternDetailsActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_patterndetails)
+    setTaskDescription()
     supportPostponeEnterTransition()
 
     if (!intent.hasExtra(KEY_PATTERN_DATA)) finish()
