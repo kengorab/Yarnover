@@ -5,12 +5,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.Menu
-import android.view.MenuItem
 import android.view.MenuItem.SHOW_AS_ACTION_NEVER
 import android.view.View
 import co.kenrg.yarnover.R
@@ -24,14 +21,13 @@ import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
 import co.kenrg.yarnover.oauth.OAuthManager
 import co.kenrg.yarnover.oauth.SplashActivity
 import co.kenrg.yarnover.oauth.UserManager
+import co.kenrg.yarnover.ui.drawer.BaseDrawerActivity
 import kotlinx.android.synthetic.main.activity_hotrightnow.*
 import kotlinx.android.synthetic.main.component_patterncard.view.*
-import kotlinx.android.synthetic.main.nav_header.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-
-class HotRightNowActivity : AppCompatActivity() {
+class HotRightNowActivity : BaseDrawerActivity() {
   companion object {
     private val KEY_PARCEL = "HOT_RIGHT_NOW_ACTIVITY_PARCEL"
   }
@@ -42,7 +38,6 @@ class HotRightNowActivity : AppCompatActivity() {
     this.handleSelectPattern(item, view)
   })
 
-  private lateinit var drawerToggle: ActionBarDrawerToggle
   private var currentPage = 0
 
   override fun onSaveInstanceState(outState: Bundle?) {
@@ -56,23 +51,7 @@ class HotRightNowActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_hotrightnow)
     setTaskDescription()
-
-    drawerToggle = object : ActionBarDrawerToggle(
-        this,
-        drawerLayout,
-        toolbar,
-        R.string.app_name,
-        R.string.app_name
-    ) {
-      override fun onDrawerOpened(drawerView: View?) {
-        super.onDrawerOpened(drawerView)
-
-        username.text = UserManager.getUsername()
-      }
-    }
-
-    drawerToggle.syncState()
-    drawerLayout.addDrawerListener(drawerToggle)
+    setupDrawer(drawerLayout, toolbar, drawerNavigation)
 
     toolbar.apply {
       activity.setSupportActionBar(this)
@@ -151,13 +130,6 @@ class HotRightNowActivity : AppCompatActivity() {
     logoutMenuItem?.setShowAsAction(SHOW_AS_ACTION_NEVER)
     logoutMenuItem?.setOnMenuItemClickListener { handleLogout() }
     return true
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-    if (drawerToggle.onOptionsItemSelected(item)) {
-      return true
-    }
-    return super.onOptionsItemSelected(item)
   }
 
   fun handleLogout(): Boolean {

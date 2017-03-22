@@ -29,6 +29,9 @@
             android:parentActivityName=".facets.hotrightnow.HotRightNowActivity"
             android:theme="@style/AppTheme.BlackStatusBar"/>
         <activity android:name=".facets.patternview.PatternPDFViewActivity"/>
+        <activity
+            android:name=".facets.userdetails.UserDetailsActivity"
+            android:theme="@style/AppTheme.TransparentStatusBar"/>
     </application>
 
 </manifest>
