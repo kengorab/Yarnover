@@ -27,4 +27,11 @@
         </menu>
     </item>
 
+    <group>
+        <item
+            android:id="@+id/navLogout"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout"/>
+    </group>
+
 </menu>

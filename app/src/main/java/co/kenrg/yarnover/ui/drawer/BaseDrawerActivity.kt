@@ -11,6 +11,8 @@ import android.view.View
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.facets.hotrightnow.HotRightNowActivity
 import co.kenrg.yarnover.facets.userdetails.UserDetailsActivity
+import co.kenrg.yarnover.oauth.OAuthManager
+import co.kenrg.yarnover.oauth.SplashActivity
 import co.kenrg.yarnover.oauth.UserManager
 import kotlinx.android.synthetic.main.nav_header.*
 
@@ -23,15 +25,10 @@ open class BaseDrawerActivity : AppCompatActivity() {
       drawerNavigation: NavigationView
   ) {
     drawerToggle = object : ActionBarDrawerToggle(
-        this,
-        drawerLayout,
-        toolbar,
-        R.string.app_name,
-        R.string.app_name
+        this, drawerLayout, toolbar, R.string.app_name, R.string.app_name
     ) {
       override fun onDrawerOpened(drawerView: View?) {
         super.onDrawerOpened(drawerView)
-
         username.text = UserManager.getUsername()
       }
     }
@@ -42,10 +39,14 @@ open class BaseDrawerActivity : AppCompatActivity() {
     drawerNavigation.setNavigationItemSelectedListener { menuItem ->
       drawerLayout.closeDrawers()
       when (menuItem.itemId) {
-        R.id.navHotRightNow -> startActivity(HotRightNowActivity::class.java)
+        R.id.navHotRightNow ->
+          startActivity(HotRightNowActivity::class.java)
         R.id.navFavorites,
         R.id.navLibrary,
-        R.id.navQueue -> startActivity(UserDetailsActivity::class.java)
+        R.id.navQueue ->
+          startActivity(UserDetailsActivity::class.java)
+        R.id.navLogout ->
+          handleLogout()
       }
       true
     }
@@ -54,6 +55,12 @@ open class BaseDrawerActivity : AppCompatActivity() {
   private fun startActivity(activityClass: Class<*>) {
     startActivity(Intent(this, activityClass))
     finish()
+  }
+
+  private fun handleLogout() {
+    OAuthManager.clearAccessToken()
+    UserManager.clearUsernameFromSharedPrefs()
+    startActivity(SplashActivity::class.java)
   }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {

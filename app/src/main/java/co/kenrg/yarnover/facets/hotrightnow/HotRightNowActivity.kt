@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
-import android.view.Menu
-import android.view.MenuItem.SHOW_AS_ACTION_NEVER
 import android.view.View
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
@@ -18,9 +16,6 @@ import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity
 import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity.Companion.KEY_PATTERN_DATA
 import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
-import co.kenrg.yarnover.oauth.OAuthManager
-import co.kenrg.yarnover.oauth.SplashActivity
-import co.kenrg.yarnover.oauth.UserManager
 import co.kenrg.yarnover.ui.drawer.BaseDrawerActivity
 import kotlinx.android.synthetic.main.activity_hotrightnow.*
 import kotlinx.android.synthetic.main.component_patterncard.view.*
@@ -123,20 +118,5 @@ class HotRightNowActivity : BaseDrawerActivity() {
     } else {
       return null
     }
-  }
-
-  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-    val logoutMenuItem = menu?.add("Logout")
-    logoutMenuItem?.setShowAsAction(SHOW_AS_ACTION_NEVER)
-    logoutMenuItem?.setOnMenuItemClickListener { handleLogout() }
-    return true
-  }
-
-  fun handleLogout(): Boolean {
-    OAuthManager.clearAccessToken()
-    UserManager.clearUsernameFromSharedPrefs()
-    startActivity(Intent(this, SplashActivity::class.java))
-    finish()
-    return true
   }
 }
