@@ -17,6 +17,13 @@ import co.kenrg.yarnover.ui.drawer.BaseDrawerActivity
 import kotlinx.android.synthetic.main.activity_userdetails.*
 
 class UserDetailsActivity : BaseDrawerActivity() {
+  companion object {
+    val KEY_TAB_ID = "TAB_ID"
+    val TAB_INDEX_FAVORITES = 0
+    val TAB_INDEX_QUEUE = 1
+    val TAB_INDEX_LIBRARY = 2
+  }
+
   private val activity: UserDetailsActivity = this
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +31,9 @@ class UserDetailsActivity : BaseDrawerActivity() {
     setContentView(R.layout.activity_userdetails)
     setTaskDescription()
     setupDrawer(drawerLayout, toolbar, drawerNavigation)
+
+    if (!intent.hasExtra(KEY_TAB_ID)) finish()
+    val selectedTab = intent.getIntExtra(KEY_TAB_ID, 0)
 
     toolbar.apply {
       activity.setSupportActionBar(this)
@@ -36,11 +46,11 @@ class UserDetailsActivity : BaseDrawerActivity() {
         Triple("Queue", R.drawable.ic_queue, BlankFragment("Queue")),
         Triple("Library", R.drawable.ic_library, BlankFragment("Library"))
     )
-    setupTabs(tabItems)
-    activity.supportActionBar?.title = "Favorites"
+    setupTabs(tabItems, selectedTab)
+    activity.supportActionBar?.title = tabItems[selectedTab].first
   }
 
-  fun setupTabs(tabItems: List<Triple<String, Int, Fragment>>) {
+  fun setupTabs(tabItems: List<Triple<String, Int, Fragment>>, selectedTabIndex: Int) {
     val tabTitles = arrayListOf<String>()
     val adapter = PagerAdapter(supportFragmentManager)
 
@@ -54,6 +64,7 @@ class UserDetailsActivity : BaseDrawerActivity() {
       adapter.addFragment(fragment)
       tabTitles.add(title)
     }
+    tabs.getTabAt(selectedTabIndex)?.select()
 
     viewPager.adapter = adapter
     viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))

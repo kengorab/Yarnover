@@ -10,9 +10,7 @@
         </menu>
     </item>
 
-    <item
-        android:title="You"
-        android:visible="false">
+    <item android:title="You">
         <menu>
             <item
                 android:id="@+id/navFavorites"
