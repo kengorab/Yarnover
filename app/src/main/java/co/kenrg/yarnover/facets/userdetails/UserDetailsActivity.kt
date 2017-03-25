@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import android.widget.TextView
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.ext.setTaskDescription
 import co.kenrg.yarnover.facets.userdetails.tabs.FavoritesFragment
+import co.kenrg.yarnover.facets.userdetails.tabs.QueueFragment
 import co.kenrg.yarnover.ui.drawer.BaseDrawerActivity
 import kotlinx.android.synthetic.main.activity_userdetails.*
 
@@ -44,7 +46,7 @@ class UserDetailsActivity : BaseDrawerActivity() {
 
     val tabItems = listOf(
         Triple("Favorites", R.drawable.ic_favorite, FavoritesFragment()),
-        Triple("Queue", R.drawable.ic_queue, BlankFragment.newInstance("Queue")),
+        Triple("Queue", R.drawable.ic_queue, QueueFragment()),
         Triple("Library", R.drawable.ic_library, BlankFragment.newInstance("Library"))
     )
     setupTabs(tabItems, selectedTab)
@@ -65,7 +67,6 @@ class UserDetailsActivity : BaseDrawerActivity() {
       adapter.addFragment(fragment)
       tabTitles.add(title)
     }
-    tabs.getTabAt(selectedTabIndex)?.select()
 
     viewPager.adapter = adapter
     viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
@@ -78,6 +79,9 @@ class UserDetailsActivity : BaseDrawerActivity() {
         toolbar.title = tabTitles[tab?.position ?: 0]
       }
     })
+
+    Log.d("ASDF", "Selecting tab " + selectedTabIndex)
+    tabs.getTabAt(selectedTabIndex)?.select()
   }
 
   internal class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

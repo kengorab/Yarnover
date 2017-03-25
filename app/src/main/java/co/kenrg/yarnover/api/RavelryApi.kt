@@ -79,7 +79,7 @@ interface RavelryApi {
   @GET("/people/{username}/queue/list.json")
   fun getQueue(
       @Path("username") username: String,
-      @Query("pattern_id") patternId: Long,
+      @Query("pattern_id") patternId: Long? = null,
       @Query("query") query: String? = null,
       @Query("query_type") queryType: LibraryQueryType = LibraryQueryType.PATTERNS,
       @Query("page") page: Int = 1,

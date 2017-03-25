@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.api.ApiManager.api
-import co.kenrg.yarnover.api.domain.Bookmark
 import co.kenrg.yarnover.facets.hotrightnow.HotRightNowParcel
 import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
 import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
@@ -27,9 +26,9 @@ import kotlinx.android.synthetic.main.component_patterncard.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class FavoritesFragment : Fragment() {
+class QueueFragment : Fragment() {
   companion object {
-    private val KEY_PARCEL = "FAVORITES_PARCEL"
+    private val KEY_PARCEL = "QUEUE_PARCEL"
     private val maxPerPage = 25
   }
 
@@ -40,7 +39,7 @@ class FavoritesFragment : Fragment() {
     handleSelectPattern(item, view)
   })
 
-  private lateinit var favoritesList: RecyclerView
+  private lateinit var queueList: RecyclerView
   private var currentPage = 0
 
   override fun onSaveInstanceState(outState: Bundle?) {
@@ -51,7 +50,7 @@ class FavoritesFragment : Fragment() {
   }
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    favoritesList = RecyclerView(activity).apply {
+    queueList = RecyclerView(activity).apply {
       layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
 
       this.adapter = patternsAdapter
@@ -61,7 +60,7 @@ class FavoritesFragment : Fragment() {
 
       this.clearOnScrollListeners()
       this.addOnScrollListener(InfiniteScrollListener(linearLayoutManager) {
-        requestFavoritePatterns(currentPage + 1)
+        requestQueuedPatterns(currentPage + 1)
       })
     }
 
@@ -70,15 +69,15 @@ class FavoritesFragment : Fragment() {
       currentPage = parcel.currentPage
       patternsAdapter.replaceWithPatterns(parcel.patterns, parcel.patterns.size >= maxPerPage)
     } else {
-      requestFavoritePatterns(currentPage + 1)
+      requestQueuedPatterns(currentPage + 1)
     }
 
-    return favoritesList
+    return queueList
   }
 
-  fun requestFavoritePatterns(page: Int) {
+  fun requestQueuedPatterns(page: Int) {
     doAsync {
-      val response = ravelryApi.getFavorites(
+      val response = ravelryApi.getQueue(
           username = UserManager.getUsername(),
           page = page,
           pageSize = maxPerPage
@@ -86,19 +85,19 @@ class FavoritesFragment : Fragment() {
 
       uiThread {
         if (!response.isSuccessful) {
-          Snackbar.make(favoritesList, "There was a problem fetching favorites", Snackbar.LENGTH_LONG)
-              .setAction("Retry") { requestFavoritePatterns(page) }
+          Snackbar.make(queueList, "There was a problem fetching queued patterns", Snackbar.LENGTH_LONG)
+              .setAction("Retry") { requestQueuedPatterns(page) }
               .setDuration(3000)
               .show()
         } else {
           currentPage = page
 
-          val patternViewItems = response.body().favorites
-              .map(Bookmark::pattern)
+          val patternViewItems = response.body().queuedProjects
               .filterNotNull()
-              .map { (id, name, _, firstPhoto, designer) ->
-                val photoUrl = firstPhoto.mediumUrl ?: firstPhoto.medium2Url ?: firstPhoto.squareUrl
-                ViewItem.Pattern(id, name, designer.name, photoUrl)
+              .map { (_, photo, _, _, _, patternId, patternName, patternAuthorName) ->
+                val photoUrl = photo.mediumUrl ?: photo.medium2Url ?: photo.squareUrl
+                val authorName = patternAuthorName ?: ""
+                ViewItem.Pattern(patternId, patternName, authorName, photoUrl)
               }
           patternsAdapter.addPatterns(patternViewItems, patternViewItems.size >= maxPerPage)
         }

@@ -12,8 +12,9 @@ data class QueuedProjectDetails(
 //    @Json(name = "notes_html") val notesHtml: String,
     @Json(name = "notes") val notes: Any, // TODO - type for notes?
 //    @Json(name = "pattern") val pattern: Pattern,
-    @Json(name = "pattern_id") val patternId: String,
+    @Json(name = "pattern_id") val patternId: Long,
     @Json(name = "pattern_name") val patternName: String,
+    @Json(name = "pattern_author_name") val patternAuthorName: String?,
     @Json(name = "position_in_queue") val positionInQueue: Int,
     @Json(name = "short_pattern_name") val shortPatternName: String,
 //    @Json(name = "queued_stashes") val queuedStashes: List<Any>, // TODO - type for Stash
