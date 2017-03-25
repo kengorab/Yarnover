@@ -19,14 +19,19 @@ class PatternDelegatorAdapter(
 
   override fun getItemViewType(position: Int) = this.items[position].viewType.type
 
-  fun addPatterns(patterns: List<ViewItem.Pattern>) {
+  fun addPatterns(patterns: List<ViewItem.Pattern>, displayLoader: Boolean = true) {
     val initPosition = items.size - 1
     items.removeAt(initPosition)
     notifyItemRemoved(initPosition)
 
     items.addAll(patterns)
-    items.add(ViewItem.Loading)
-    notifyItemRangeChanged(initPosition, items.size + 1)  // Add 1 to account for loading view
+
+    if (displayLoader) {
+      items.add(ViewItem.Loading)
+      notifyItemRangeChanged(initPosition, items.size + 1)
+    } else {
+      notifyItemRangeChanged(initPosition, items.size)
+    }
   }
 
   fun getPatterns(): List<ViewItem.Pattern> {
@@ -35,14 +40,18 @@ class PatternDelegatorAdapter(
         .map { it as ViewItem.Pattern }
   }
 
-  fun replaceWithPatterns(patterns: List<ViewItem.Pattern>) {
+  fun replaceWithPatterns(patterns: List<ViewItem.Pattern>, displayLoader: Boolean = true) {
     items.clear()
     val lastPosition = if (items.lastIndex == -1) 0 else items.lastIndex
     notifyItemRangeRemoved(0, lastPosition)
 
     items.addAll(patterns)
-    items.add(ViewItem.Loading)
-    notifyItemRangeInserted(0, items.size)
+    if (displayLoader) {
+      items.add(ViewItem.Loading)
+      notifyItemRangeInserted(0, items.size)
+    } else {
+      notifyItemRangeInserted(0, items.size)
+    }
   }
 
   override fun getItemCount(): Int {

@@ -11,6 +11,7 @@ import co.kenrg.yarnover.api.request.QueuedProject
 import co.kenrg.yarnover.api.request.Volume
 import co.kenrg.yarnover.api.response.BookmarkResponse
 import co.kenrg.yarnover.api.response.CurrentUserResponse
+import co.kenrg.yarnover.api.response.PaginatedBookmarkResponse
 import co.kenrg.yarnover.api.response.PaginatedLibrarySearchResponse
 import co.kenrg.yarnover.api.response.PaginatedPatternsResponse
 import co.kenrg.yarnover.api.response.PaginatedQueueResponse
@@ -96,4 +97,13 @@ interface RavelryApi {
       @Path("username") username: String,
       @Path("id") favoritedId: Long
   ): Call<Map<String, Any>>
+
+  @GET("/people/{username}/favorites/list.json")
+  fun getFavorites(
+      @Path("username") username: String,
+      @Query("query") query: String? = null,
+      @Query("deep_search") deepSearch: Boolean = false,
+      @Query("page") page: Int = 1,
+      @Query("page_size") pageSize: Int = 25
+  ): Call<PaginatedBookmarkResponse>
 }
