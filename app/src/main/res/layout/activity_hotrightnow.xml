@@ -33,8 +33,9 @@
             android:background="@color/backgroundColor"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/patternList"
+            <fragment
+                android:id="@+id/hotRightNowPatternsFragment"
+                android:name="co.kenrg.yarnover.facets.userdetails.tabs.HotRightNowPatternsFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

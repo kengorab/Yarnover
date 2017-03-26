@@ -1,4 +1,4 @@
-package co.kenrg.yarnover.facets.hotrightnow.adapter
+package co.kenrg.yarnover.ui.patternlist.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

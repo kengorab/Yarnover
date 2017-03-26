@@ -1,4 +1,4 @@
-package co.kenrg.yarnover.facets.hotrightnow.adapter
+package co.kenrg.yarnover.ui.patternlist.adapter
 
 import android.os.Parcel
 import co.kenrg.yarnover.iface.adapter.DelegateViewItem

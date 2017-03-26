@@ -1,4 +1,4 @@
-package co.kenrg.yarnover.facets.userdetails.tabs
+package co.kenrg.yarnover.ui.patternlist
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -14,12 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import co.kenrg.yarnover.R
-import co.kenrg.yarnover.facets.hotrightnow.HotRightNowParcel
-import co.kenrg.yarnover.facets.hotrightnow.adapter.PatternDelegatorAdapter
-import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
 import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity
 import co.kenrg.yarnover.facets.patterndetails.PatternDetailsActivity.Companion.KEY_PATTERN_DATA
-import co.kenrg.yarnover.iface.adapter.InfiniteScrollListener
+import co.kenrg.yarnover.ui.patternlist.adapter.PatternDelegatorAdapter
+import co.kenrg.yarnover.ui.patternlist.adapter.PatternListParcel
+import co.kenrg.yarnover.ui.patternlist.adapter.ViewItem
 import kotlinx.android.synthetic.main.component_patterncard.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -30,7 +29,6 @@ abstract class BasePatternListFragment : Fragment() {
     val maxPerPage = 25
   }
 
-  // TODO - Move PatternDelegatorAdaptor from the HRN facets package
   private val patternsAdapter = PatternDelegatorAdapter(onPatternClick = { item, view ->
     handleSelectPattern(item, view)
   })
@@ -42,7 +40,7 @@ abstract class BasePatternListFragment : Fragment() {
     super.onSaveInstanceState(outState)
     val patterns = patternsAdapter.getPatterns()
     if (patterns.isNotEmpty())
-      outState?.putParcelable(KEY_PARCEL, HotRightNowParcel(currentPage, patterns))
+      outState?.putParcelable(KEY_PARCEL, PatternListParcel(currentPage, patterns))
   }
 
   abstract fun getPatterns(
@@ -83,7 +81,7 @@ abstract class BasePatternListFragment : Fragment() {
       this.layoutManager = linearLayoutManager
 
       this.clearOnScrollListeners()
-      this.addOnScrollListener(InfiniteScrollListener(linearLayoutManager) {
+      this.addOnScrollListener(co.kenrg.yarnover.iface.adapter.InfiniteScrollListener(linearLayoutManager) {
         loadPatterns(currentPage + 1)
       })
     }
@@ -91,7 +89,7 @@ abstract class BasePatternListFragment : Fragment() {
     if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PARCEL)) {
       // Load data from saved state (i.e. orientation change)
 
-      val parcel = savedInstanceState.get(KEY_PARCEL) as HotRightNowParcel
+      val parcel = savedInstanceState.get(KEY_PARCEL) as PatternListParcel
       currentPage = parcel.currentPage
       patternsAdapter.replaceWithPatterns(parcel.patterns, parcel.patterns.size >= maxPerPage)
     } else if (currentPage == 0) {

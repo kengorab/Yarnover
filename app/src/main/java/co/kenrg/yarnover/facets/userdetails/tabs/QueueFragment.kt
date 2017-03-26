@@ -2,8 +2,9 @@ package co.kenrg.yarnover.facets.userdetails.tabs
 
 import co.kenrg.yarnover.api.ApiManager.api
 import co.kenrg.yarnover.api.domain.QueuedProjectDetails
-import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
+import co.kenrg.yarnover.ui.patternlist.adapter.ViewItem
 import co.kenrg.yarnover.oauth.UserManager
+import co.kenrg.yarnover.ui.patternlist.BasePatternListFragment
 
 class QueueFragment : BasePatternListFragment() {
   private val ravelryApi = api()

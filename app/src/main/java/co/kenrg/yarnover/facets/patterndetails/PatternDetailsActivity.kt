@@ -23,7 +23,7 @@ import co.kenrg.yarnover.ext.format
 import co.kenrg.yarnover.ext.loadImg
 import co.kenrg.yarnover.ext.setTaskDescription
 import co.kenrg.yarnover.ext.startPostponedTransition
-import co.kenrg.yarnover.facets.hotrightnow.adapter.ViewItem
+import co.kenrg.yarnover.ui.patternlist.adapter.ViewItem
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_DESIGNER_NAME
 import co.kenrg.yarnover.facets.patternview.PatternPDFViewActivity.Companion.KEY_PATTERN_DOWNLOAD_URL
