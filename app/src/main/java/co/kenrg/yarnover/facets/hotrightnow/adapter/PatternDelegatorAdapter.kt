@@ -48,7 +48,7 @@ class PatternDelegatorAdapter(
     items.addAll(patterns)
     if (displayLoader) {
       items.add(ViewItem.Loading)
-      notifyItemRangeInserted(0, items.size)
+      notifyItemRangeInserted(0, items.size + 1)
     } else {
       notifyItemRangeInserted(0, items.size)
     }

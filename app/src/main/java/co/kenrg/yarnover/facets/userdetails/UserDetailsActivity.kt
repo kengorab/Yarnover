@@ -8,13 +8,10 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import co.kenrg.yarnover.R
 import co.kenrg.yarnover.ext.setTaskDescription
 import co.kenrg.yarnover.facets.userdetails.tabs.FavoritesFragment
+import co.kenrg.yarnover.facets.userdetails.tabs.LibraryFragment
 import co.kenrg.yarnover.facets.userdetails.tabs.QueueFragment
 import co.kenrg.yarnover.ui.drawer.BaseDrawerActivity
 import kotlinx.android.synthetic.main.activity_userdetails.*
@@ -47,7 +44,7 @@ class UserDetailsActivity : BaseDrawerActivity() {
     val tabItems = listOf(
         Triple("Favorites", R.drawable.ic_favorite, FavoritesFragment()),
         Triple("Queue", R.drawable.ic_queue, QueueFragment()),
-        Triple("Library", R.drawable.ic_library, BlankFragment.newInstance("Library"))
+        Triple("Library", R.drawable.ic_library, LibraryFragment())
     )
     setupTabs(tabItems, selectedTab)
     activity.supportActionBar?.title = tabItems[selectedTab].first
@@ -92,22 +89,5 @@ class UserDetailsActivity : BaseDrawerActivity() {
     override fun getItem(position: Int) = fragments[position]
 
     override fun getCount() = fragments.size
-  }
-
-  internal class BlankFragment : Fragment() {
-    companion object {
-      fun newInstance(title: String): BlankFragment {
-        val fragment = BlankFragment()
-        val bundle = Bundle(1)
-        bundle.putString("TITLE", title)
-        fragment.arguments = bundle
-        return fragment
-      }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-      val title = arguments.getString("TITLE")
-      return TextView(activity).apply { text = title }
-    }
   }
 }

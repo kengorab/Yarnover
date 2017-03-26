@@ -313,7 +313,7 @@ class PatternDetailsActivity : AppCompatActivity() {
 
     doAsync {
       val username = UserManager.getUsername()
-      val librarySearchResponse = ravelryApi.searchLibrary(username, patternName).execute()
+      val librarySearchResponse = ravelryApi.getLibrary(username, patternName).execute()
 
       if (!librarySearchResponse.isSuccessful)
         uiThread { handleError() }

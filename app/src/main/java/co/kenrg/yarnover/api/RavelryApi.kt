@@ -44,9 +44,9 @@ interface RavelryApi {
   ): Call<PatternDetailsResponse>
 
   @GET("/people/{username}/library/search.json")
-  fun searchLibrary(
+  fun getLibrary(
       @Path("username") username: String,
-      @Query("query") query: String,
+      @Query("query") query: String? = null,
       @Query("query_type") queryType: LibraryQueryType = LibraryQueryType.PATTERNS,
       @Query("type") type: LibrarySourceType = LibrarySourceType.PATTERN,
       @Query("sort") sort: SortOrder = SortOrder.BEST_MATCH,
