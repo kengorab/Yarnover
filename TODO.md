@@ -42,6 +42,8 @@ A list of things that should get done in this project, in no particular order of
   
   ✔ Favorites, Queue, and Library should use some superclass Fragment
   
+  ◻ Sorting options in each F/Q/L tab
+  
 ## Favorites
   
   ✔ Display Favorites in pattern card list
