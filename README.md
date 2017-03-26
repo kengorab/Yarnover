@@ -1,7 +1,7 @@
 # Yarnover 
 An Android app for the popular knitting/crochet site [Ravelry](http://www.ravelry.com/).
 
-<img src="https://github.com/kengorab/Yarnover/blob/master/screenshots/2017-03-19/homescreen.png" width="25%">
+<img src="https://github.com/kengorab/Yarnover/blob/master/screenshots/2017-03-25/hot-right-now.png" width="33.3%"> <img src="https://github.com/kengorab/Yarnover/blob/master/screenshots/2017-03-25/library.png" width="33.3%"> <img src="https://github.com/kengorab/Yarnover/blob/master/screenshots/2017-03-25/pattern-details.png" width="33.3%">
 
 ## Description/Project Goals
 It's currently a WIP, but the goals are to eventually have an app, using modern Material Design guidelines and transitions/animations, that allows me to browse currently hot/"trending" patterns on Ravelry, download/view the pattern PDFs, and manage my favorites/queue/library.
