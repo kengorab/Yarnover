@@ -20,7 +20,7 @@ A list of things that should get done in this project, in no particular order of
   
   ◻ Display icons on cards for quick actions (adding/removing to/from library/queue/favorites)
   
-  ◻ Use Fragment, using same `BasePatternListFragment` as Favorites/Queue/Library
+  ✔ Use Fragment, using same `BasePatternListFragment` as Favorites/Queue/Library
 
 # `PatternDetailsActivity`
   ✔ Display photo (with shared element transition) of pattern
