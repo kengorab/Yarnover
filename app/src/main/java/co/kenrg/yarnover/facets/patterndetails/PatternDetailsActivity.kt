@@ -243,7 +243,7 @@ class PatternDetailsActivity : AppCompatActivity() {
           this.add(Pair("Published", parsedDate.format()!!))
       }
 
-      if (patternDetails.yarnWeightDesc.isNotBlank())
+      if (patternDetails.yarnWeightDesc != null && patternDetails.yarnWeightDesc.isNotBlank())
         this.add(Pair("Yarn Weight", patternDetails.yarnWeightDesc))
 
       if (patternDetails.gaugeDesc.isNotBlank())
@@ -252,7 +252,7 @@ class PatternDetailsActivity : AppCompatActivity() {
       if (patternDetails.needleSizes.isNotEmpty())
         this.add(Pair("Needle Size", patternDetails.needleSizes.joinToString(", ")))
 
-      if (patternDetails.yardageDesc.isNotBlank())
+      if (patternDetails.yardageDesc != null && patternDetails.yardageDesc.isNotBlank())
         this.add(Pair("Yardage", patternDetails.yardageDesc))
     }
 

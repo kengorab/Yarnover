@@ -21,6 +21,7 @@
         <activity android:name=".oauth.OAuthActivity"/>
         <activity android:name=".oauth.AuthenticateActivity"/>
         <activity
+            android:label="Hot Right Now"
             android:name=".facets.hotrightnow.HotRightNowActivity"
             android:theme="@style/AppTheme.TransparentStatusBar"/>
         <activity
